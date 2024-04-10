@@ -1,0 +1,110 @@
+.work_area {
+    width: 100%;
+    height: calc(100vh - 40px);
+    display: flex;
+    box-shadow: 2px 2px 8px #0004;
+
+    .tabs_area {
+        background: #FEFEFE;
+        // box-shadow: 4px 4px 4px #EEE;
+        width : 100%;
+        height : 100%;
+        border : 1px solid #EEE;
+        display: flex;
+        flex-direction: column;
+
+        .tabs_area_header {
+            width: 100%;
+            height: 40px;
+            background: #F7F7F7;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            padding-top: 2px;
+
+            .tab_button {
+                &:first-child {
+                    margin-left: 2px;
+                }
+                transition: 0.3s;
+                position: relative;
+                min-width: 80px;
+                padding: 10px;
+                background-color: #59F4;
+                color: #777;
+                font-weight: 600;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+
+                &.active {
+                    background-color: #59F;
+                    text-shadow: 2px 2px 2px #0004;
+                    color: #FFF;
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        transition: 0.3s;
+                        width: 100%;
+                        height: 75%;
+                        z-index: 1;
+                        top: 0px;
+                        left: 0px;
+                        background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+                        opacity: 1.0;
+                    }
+                }
+
+                &:not(.active){
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #59F;
+                        color: #FFF;
+                    }
+                }
+            }
+        }
+
+        .tabs_area_body {
+            width: 100%;
+            height: 100%;
+            overflow-y: hidden;
+
+            .tab_panel {
+                display: none;
+                width: 100%;
+                height: 100%;
+                // overflow-x: hidden;
+
+                .tab_panel_left, .tab_panel_right {
+                    display: flex;
+                    padding: 10px;
+                    gap:10px;
+                }
+
+                .tab_panel_right {
+                    flex-direction: column;
+                    width: 30%;
+                    overflow-y: auto;
+                }
+
+                .tab_panel_left {
+                    display: flex;
+                    flex-direction: column;
+                    width: 70%;
+                    border-right: 2px solid #0002;
+                    overflow: hidden;
+                }
+
+                &.active {
+                    display: flex;
+                }
+            }
+
+            :not(.active) .constructor {
+                display: flex;
+                flex-direction: row;
+            }
+        }
+    }
+}
