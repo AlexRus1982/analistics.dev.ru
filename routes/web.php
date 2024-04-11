@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -148,4 +149,15 @@ Route::get('/yandex-direct-info', function () {
 
     // dump($server_output);
     return($server_output);
+});
+
+
+Route::get('/groups-list', function () {
+    $groups = DB::table('Groups')
+    ->get();
+
+    return response()->json([
+        "server_answer" => "success",
+        "groups_list"   => $groups,
+    ]);
 });

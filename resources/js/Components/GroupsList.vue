@@ -56,14 +56,14 @@
     }
 
     .list_body {
-        // padding: 10px 0px 10px 10px;
+        padding: 10px 0px 10px 10px;
         display: flex;
         flex-wrap: wrap;
         flex-direction: row;
         gap: 10px;
         align-content: flex-start;
         overflow-y: auto;
-        width: 100%;
+        width: calc(100% - 10px);
         height: 100%;
         box-shadow: inset 0px 0px 8px #0004;
     }
