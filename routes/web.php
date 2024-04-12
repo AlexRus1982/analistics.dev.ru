@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -14,11 +15,13 @@ use Illuminate\Support\Facades\DB;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function() {
     return view('main-app');
 });
 
-Route::get('/yandex-direct-info', function () {
+Route::get('/yandex-direct-info', function(Request $request) {
+    logger($request->period);
+
     $ReportsURL = 'https://api.direct.yandex.com/json/v5/reports';
 
     // OAuth-токен пользователя, от имени которого будут выполняться запросы
@@ -121,7 +124,7 @@ Route::get('/yandex-direct-info', function () {
 
             "ReportName" : "test_otchet",
             "ReportType": "CAMPAIGN_PERFORMANCE_REPORT",
-            "DateRangeType" : "THIS_MONTH",
+            "DateRangeType" : "' . $request->period . '",
             "Format" : "TSV",
             "IncludeVAT" : "YES",
             "IncludeDiscount" : "NO"
@@ -152,7 +155,7 @@ Route::get('/yandex-direct-info', function () {
 });
 
 
-Route::get('/groups-list', function () {
+Route::get('/groups-list', function() {
     $groups = DB::table('Groups')
     ->get();
 
@@ -160,4 +163,149 @@ Route::get('/groups-list', function () {
         "server_answer" => "success",
         "groups_list"   => $groups,
     ]);
+});
+
+Route::post('/group-add', function(Request $request) {
+    try {
+        $newGroupId = DB::table('Groups')->insertGetId([
+            'groupName' => $request->groupName,
+        ]);
+
+        return response()->json([
+            "server_answer" => "success",
+            "group_id"      => $newGroupId,
+            'groupName'     => $request->groupName,
+        ]);
+    } catch (Exception $e) {
+        return response()->json([ 
+            "server_answer" => "error", 
+            "error_text" => $e, 
+        ]);
+    }
+});
+
+Route::post('/group-rename', function(Request $request) {
+    try {
+        DB::table('Groups')
+        ->where('groupId', $request->groupId)
+        ->update(['groupName' => $request->groupName]);
+
+        return response()->json([
+            "server_answer" => "success",
+            'groupName'     => $request->groupName,
+        ]);
+    } catch (Exception $e) {
+        return response()->json([ 
+            "server_answer" => "error", 
+            "error_text" => $e, 
+        ]);
+    }
+});
+
+Route::post('/group-remove', function(Request $request) {
+    try {
+        DB::table('Groups')
+        ->where('groupId', $request->groupId)
+        ->delete();
+
+        return response()->json([ 
+            "server_answer" => "success", 
+        ]);
+    } catch (Exception $e) {
+        return response()->json([ 
+            "server_answer" => "error", 
+            "error_text" => $e, 
+        ]);
+    }
+});
+
+Route::post('/group-add-to-group', function(Request $request) {
+    try {
+        DB::table('Groups')
+        ->where('groupId', $request->groupId)
+        ->update(['parentGroupId' => $request->parentGroupId]);
+
+        return response()->json([ 
+            "server_answer" => "success", 
+            'parentGroupId' => $request->parentGroupId, 
+        ]);
+    } catch (Exception $e) {
+        return response()->json([ 
+            "server_answer" => "error", 
+            "error_text" => $e, 
+        ]);
+    }
+});
+
+Route::post('/campaign-add-to-group', function(Request $request) {
+    try {
+        DB::table('GroupsCampaigns')
+        ->where('campaignId', $request->campaignId)
+        ->delete();
+
+        DB::table('GroupsCampaigns')->insert([
+            'campaignId' => $request->campaignId,
+            'groupId'    => $request->groupId,
+        ]);
+
+        return response()->json([ 
+            "server_answer" => "success", 
+        ]);
+    } catch (Exception $e) {
+        return response()->json([ 
+            "server_answer" => "error", 
+            "error_text" => $e, 
+        ]);
+    }
+});
+
+Route::post('/campaign-remove-from-group', function(Request $request) {
+    try {
+        DB::table('GroupsCampaigns')
+        ->where('campaignId', $request->campaignId)
+        ->delete();
+
+        return response()->json([ 
+            "server_answer" => "success", 
+        ]);
+    } catch (Exception $e) {
+        return response()->json([ 
+            "server_answer" => "error", 
+            "error_text" => $e, 
+        ]);
+    }
+});
+
+Route::get('/campaign-group-links', function() {
+    try {
+        $links = DB::table('GroupsCampaigns')
+        ->get();
+
+        return response()->json([ 
+            "server_answer" => "success", 
+            "links_list"    => $links,
+        ]);
+    } catch (Exception $e) {
+        return response()->json([ 
+            "server_answer" => "error", 
+            "error_text" => $e, 
+        ]);
+    }
+});
+
+Route::post('/group-remove-from-group', function(Request $request) {
+    try {
+        DB::table('Groups')
+        ->where('groupId', $request->groupId)
+        ->update(['parentGroupId' => -1]);
+
+        return response()->json([ 
+            "server_answer" => "success", 
+        ]);
+    } catch (Exception $e) {
+        return response()->json([ 
+            "server_answer" => "error", 
+            "error_text" => $e, 
+        ]);
+    }
 });

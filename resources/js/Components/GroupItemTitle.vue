@@ -99,39 +99,91 @@
         },
 
         methods:{
+            editGroupNameOnClick(groupId) {
+                const group = this.vueStore.groupsMap.get(`${groupId}`)
+                const newGroupName = prompt('Новое имя группы', group.groupName)
+                
+                fetch(`/group-rename`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept'          : 'application/json',
+                        'Content-Type'    : 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'groupId'         : groupId,
+                        'groupName'       : newGroupName,
+                    })
+                })
+                .then(response => response.json())
+                .then(response => {
+                    if (response.server_answer != 'error'){
+                        group.groupName = newGroupName
+                    }
+                    console.debug(response);
+                })
+                .catch(error => console.log("request failed", error));
+            },
+            
             addToGroupOnClick(groupId) {
                 console.debug(this.vueStore.groupsModalWindow)
                 this.vueStore.groupsModalWindow.showGroupModal(`${groupId}`)
             },
 
-            editGroupNameOnClick(groupId) {
-                const group = this.vueStore.groupsMap.get(`${groupId}`)
-                const newGroupName = prompt('Новое имя группы', group.groupName)
-                group.groupName = newGroupName
-            },
-
             removeFromGroupOnClick(groupId) {
                 if (confirm('Удалить из группы')) {
-                    const group = this.vueStore.groupsMap.get(`${groupId}`)
-                    group.parentGroupId = '-1'
+                    fetch(`/group-remove-from-group`, {
+                        method  : 'POST',
+                        headers : {
+                            'Accept'          : 'application/json',
+                            'Content-Type'    : 'application/json'
+                        },
+                        body    : JSON.stringify({
+                            'groupId'         : groupId,
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response.server_answer != 'error'){
+                            const group = this.vueStore.groupsMap.get(`${groupId}`)
+                            group.parentGroupId = '-1'
+                        }
+                        console.debug(response);
+                    })
+                    .catch(error => console.log("request failed", error));
                 }
             },
 
             removeGroupOnClick(groupId) {
                 if (!confirm('Удалить группу?')) return
 
-                const filteredCampaigns = Array.from(this.vueStore.campaignsMap).filter(value => value[1].parentId == groupId)
-                for (const campaign of filteredCampaigns) {
-                    campaign[1].parentId = '-1'
-                }
+                fetch(`/group-remove`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept'          : 'application/json',
+                        'Content-Type'    : 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'groupId'         : groupId,
+                    })
+                })
+                .then(response => response.json())
+                .then(response => {
+                    if (response.server_answer != 'error'){
+                        const filteredCampaigns = Array.from(this.vueStore.campaignsMap).filter(value => value[1].parentId == groupId)
+                        for (const campaign of filteredCampaigns) {
+                            campaign[1].parentId = '-1'
+                        }
 
-                const filteredGroups    = Array.from(this.vueStore.groupsMap).filter(item => item[1].parentGroupId == groupId)
-                for (const group of filteredGroups) {
-                    group[1].parentGroupId = '-1'
-                }
+                        const filteredGroups    = Array.from(this.vueStore.groupsMap).filter(item => item[1].parentGroupId == groupId)
+                        for (const group of filteredGroups) {
+                            group[1].parentGroupId = '-1'
+                        }
 
-                this.vueStore.groupsMap.delete(`${groupId}`)
-
+                        this.vueStore.groupsMap.delete(`${groupId}`)
+                    }
+                    console.debug(response);
+                })
+                .catch(error => console.log("request failed", error));
             },
         }
     }

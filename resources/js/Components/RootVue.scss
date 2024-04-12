@@ -99,6 +99,10 @@
                 &.active {
                     display: flex;
                 }
+
+                &.table {
+                    flex-direction: column;
+                }
             }
 
             :not(.active) .constructor {

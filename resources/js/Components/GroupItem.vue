@@ -215,8 +215,25 @@
 
             removeFromGroupOnClick(campaignId) {
                 if (confirm('Удалить из группы?')) {
-                    const campaign = this.vueStore.campaignsMap.get(`${campaignId}`)
-                    campaign.parentId = "-1"
+                    fetch(`/campaign-remove-from-group`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept'       : 'application/json',
+                            'Content-Type' : 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'campaignId'   : campaignId,
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response.server_answer != 'error'){
+                            const campaign = this.vueStore.campaignsMap.get(`${campaignId}`)
+                            campaign.parentId = "-1"
+                        }
+                        console.debug(response);
+                    })
+                    .catch(error => console.log("request failed", error));
                 }
             },
         }

@@ -122,8 +122,26 @@
                 console.debug(this.currentGroupId, this.currentCampaignId)
                 this.closeModal()
                 if (this.currentGroupId != -1 && this.currentCampaignId != -1) {
-                    const campaign = this.vueStore.campaignsMap.get(`${this.currentCampaignId}`)
-                    campaign.parentId = this.currentGroupId
+                    fetch(`/campaign-add-to-group`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept'       : 'application/json',
+                            'Content-Type' : 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'groupId'      : this.currentGroupId,
+                            'campaignId'   : this.currentCampaignId,
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response.server_answer != 'error'){
+                            const campaign = this.vueStore.campaignsMap.get(`${this.currentCampaignId}`)
+                            campaign.parentId = this.currentGroupId
+                        }
+                        console.debug(response);
+                    })
+                    .catch(error => console.log("request failed", error));
                 }
             },
         }

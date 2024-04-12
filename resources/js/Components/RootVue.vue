@@ -20,12 +20,11 @@
             <div class="tabs_area_body">
                 <!-- Таблица -->
                 <div 
-                    class="tab_panel" 
+                    class="tab_panel table" 
                     :class="activeTab == 0 ? 'active' : false" 
                     @click="onOtchetTabClick"
                 >
-                    Отчет
-                    {{ vueStore.arr[0] }}
+                    <table-list />
                 </div>
 
                 <!-- Конструктор -->
@@ -55,6 +54,7 @@
 
 <script>
     import {ref} from 'vue'
+    import TableList from './TableList.vue';
     import GroupsList from './GroupsList.vue';
     import CampaignList from './CampaignList.vue';
 
@@ -62,6 +62,7 @@
         name: "RootVue",
         
         components: {
+            'table-list'    : TableList,
             'groups-list'   : GroupsList,
             'campaign-list' : CampaignList,
         },

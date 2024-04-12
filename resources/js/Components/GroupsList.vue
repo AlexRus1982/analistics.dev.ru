@@ -185,8 +185,26 @@
                 console.debug(this.currentGroupId, this.subGroupId)
                 this.$refs.modalWindow.show = false
                 if (this.currentGroupId != -1 && this.subGroupId != -1) {
-                    const group = this.vueStore.groupsMap.get(`${this.subGroupId}`)
-                    group.parentGroupId = this.currentGroupId
+                    fetch(`/group-add-to-group`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept'          : 'application/json',
+                            'Content-Type'    : 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'groupId'         : this.subGroupId,
+                            'parentGroupId'   : this.currentGroupId,
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response.server_answer != 'error'){
+                            const group = this.vueStore.groupsMap.get(`${this.subGroupId}`)
+                            group.parentGroupId = this.currentGroupId
+                        }
+                        console.debug(response);
+                    })
+                    .catch(error => console.log("request failed", error));
                 }
             },
 
@@ -202,18 +220,26 @@
 
             addNewGroup() {
                 const newGroupName = prompt('Введите имя новой группы', '')
-                let maxGroupId = -1
-                for(const element of this.vueStore.groupsMap) {
-                    const id = parseInt(element[0])
-                    maxGroupId = (id > maxGroupId) ? id : maxGroupId
-                }
 
-                maxGroupId++
-                console.debug(maxGroupId)
-
-                this.vueStore.groupsMap.set(`${maxGroupId}`, { 'groupId' : `${maxGroupId}`, 'groupName' : newGroupName, 'parentGroupId' : "-1", 'chosen' : false, campaignsExtednded : true, groupsExtended : true, })
+                fetch(`/group-add`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept'          : 'application/json',
+                        'Content-Type'    : 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'groupName'       : newGroupName,
+                    })
+                })
+                .then(response => response.json())
+                .then(response => {
+                    if (response.server_answer != 'error'){
+                        this.vueStore.groupsMap.set(`${response.group_id}`, { 'groupId' : `${response.group_id}`, 'groupName' : `${response.groupName}`, 'parentGroupId' : "-1", 'chosen' : false, campaignsExtednded : true, groupsExtended : true, })
+                    }
+                    console.debug(response);
+                })
+                .catch(error => console.log("request failed", error));
             }
         },
-
     }
 </script>
