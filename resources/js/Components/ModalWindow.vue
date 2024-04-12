@@ -58,6 +58,8 @@
         }
 
         &_content {
+            max-height: 80vh;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 5px;

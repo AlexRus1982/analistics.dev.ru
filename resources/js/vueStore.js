@@ -1,7 +1,5 @@
 export const VueStore = {
-    nested              : { count: 0 },
-    arr                 : ['foo', 'bar'],
-    mess                : '12334325345',
+    loading             : false,
     groupsModalWindow   : null,
     campaignsMap        : new Map(),
     groupsMap           : new Map(),
@@ -10,6 +8,7 @@ export const VueStore = {
     setup               : async function(period = 'YESTERDAY') {
 
         const store = this
+        store.loading = true
 
         const yandexDirectInfoPromise = new Promise((resolve, reject) => {
             fetch(`/yandex-direct-info?period=${period}`)
@@ -64,6 +63,14 @@ export const VueStore = {
             .catch(error => console.log("request failed", error));
         })
 
+        const makeLinks = (links_list) => {
+            for (const link of links_list) {
+
+                const campaign = store.campaignsMap.get(`${link.campaignId}`)
+                campaign.parentId = link.groupId
+            }
+        }
+
         Promise.all([
             yandexDirectInfoPromise,
             groupListPromise,
@@ -74,11 +81,8 @@ export const VueStore = {
             .then(response => response.json())
             .then(({server_answer, links_list}) => {
                 if (server_answer == 'error') return
-                for (const link of links_list) {
-
-                    const campaign = store.campaignsMap.get(`${link.campaignId}`)
-                    campaign.parentId = link.groupId
-                }
+                makeLinks(links_list)
+                store.loading = false
             })
             .catch(error => console.log("request failed", error))
         });

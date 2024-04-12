@@ -58,8 +58,7 @@
     .list_body {
         padding: 10px 0px 10px 10px;
         display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
+        flex-direction: column;
         gap: 10px;
         align-content: flex-start;
         overflow-y: auto;

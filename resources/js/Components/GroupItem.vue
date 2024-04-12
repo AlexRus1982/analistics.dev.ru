@@ -69,7 +69,7 @@
     }
 
     .group_item {
-        width: 99%;
+        width: 98%;
         height: fit-content;
         max-width: 500px;
         display: flex;
@@ -78,7 +78,7 @@
         border: 1px solid #CCC;
         box-shadow: 4px 4px 4px #CCC;
         transition: 0.3s;
-        overflow-x: hidden;
+        // overflow-x: hidden;
 
         &:last-child {
             margin-bottom: 10px;
