@@ -4,7 +4,7 @@
             <div v-for="i in innerLevel" class="level_tab">
                 <div class="level_tab_line"></div>
             </div>
-            <div v-if="groups.length > 0 || campaigns.length > 0" class="name_expander" @click="onExpanderClick">
+            <div v-if="groups.length > 0" class="name_expander" @click="onExpanderClick">
                 <svg v-if="group.tableGroupsExtended == false" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -16,22 +16,31 @@
             </div>
             <div class="group_label">{{ group.groupName }}</div>
         </td>
-        <td>{{ group.Cost.toFixed(2) }}</td>
-        <td>{{ group.Impressions }}</td>
-        <td>{{ group.Clicks }}</td>
+        <td class="values_cell">
+            <div class="back_cell" :style="{ width: group.CostPerc + '%' }"></div>
+            <div class="front_cell">{{ group.CostStr }}</div>
+        </td>
+        <td class="values_cell">
+            <div class="back_cell" :style="{ width: group.ImpressionsPerc + '%' }"></div>
+            <div class="front_cell">{{ group.ImpressionsStr }}</div>
+        </td>
+        <td class="values_cell">
+            <div class="back_cell" :style="{ width: group.ClicksPerc + '%' }"></div>
+            <div class="front_cell">{{ group.ClicksStr }}</div>
+        </td>
     </tr>
 
-    <tr v-if="isExtended && group && group.tableGroupsExtended && parentExtended" v-for="[key, campaign] of campaigns">
+    <!-- <tr v-if="isExtended && group && group.tableGroupsExtended && parentExtended" v-for="[key, campaign] of campaigns">
         <td class="name">
             <div v-for="i in innerLevel + 1" class="level_tab">
                 <div class="level_tab_line"></div>
             </div>
             <div class="group_label">{{ campaign.CampaignName }}</div>
         </td>
-        <td>{{ campaign.Cost.toFixed(2) }}</td>
-        <td>{{ campaign.Impressions }}</td>
-        <td>{{ campaign.Clicks }}</td>
-    </tr>
+        <td>{{ String(campaign.Cost.toFixed(2)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}</td>
+        <td>{{ String(campaign.Impressions).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</td>
+        <td>{{ String(campaign.Clicks).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</td>
+    </tr> -->
 
     <TableListItem
         v-for="[key, childGroup] of groups"
@@ -87,6 +96,7 @@
                 }
                 &:not(.name) {
                     width: 200px;
+                    min-width: 130px;
                     text-align: right;
                 }
             }
@@ -94,7 +104,7 @@
     }
 
     .group_title {
-        background-color: #F952;
+        background-color: #F950;
     }
 
     .level_tab {
@@ -113,6 +123,33 @@
             z-index: 1;
         }
 
+    }
+
+    .values_cell {
+        position: relative;
+
+        .back_cell {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            width: 75%;
+            background-color: #0F0;
+            z-index: 1;
+        }
+
+        .front_cell {
+            position: absolute;
+            display: flex;
+            top: 0px;
+            right: 10px;
+            height: 100%;
+            width: 0%;
+            z-index: 2;
+            align-items: center;
+            justify-content: flex-end;
+            text-wrap: nowrap;
+        }
     }
 </style>
 

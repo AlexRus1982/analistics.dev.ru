@@ -39,16 +39,10 @@
                     </div>
                     <div class="name_label">Всего</div>
                 </td>
-                <td>{{ allCoasts.toFixed(2) }}</td>
+                <td>{{ allCoasts }}</td>
                 <td>{{ allImpressions }}</td>
                 <td>{{ allClicks }}</td>
             </tr>
-            <!-- <tr v-if="allExpander == true" v-for="[key, campaign] of vueStore.campaignsMap">
-                <td class="name">{{ campaign.CampaignName }}</td>
-                <td>{{ campaign.Cost.toFixed(2) }}</td>
-                <td>{{ campaign.Impressions }}</td>
-                <td>{{ campaign.Clicks }}</td>
-            </tr> -->
             <table-list-item :groupId="-1" :isExtended="allExpander == true" :innerLevel="0"/>
         </table>
     </div>
@@ -170,27 +164,30 @@
 
         computed : {
             allClicks() {
-                let allClicks = 0
-                for(const [key, campaign] of this.vueStore.campaignsMap) {
-                    allClicks += campaign.parentId != '-1' ? campaign.Clicks : 0;
-                }
-                return allClicks
+                // let allClicks = 0
+                // for(const [key, campaign] of this.vueStore.campaignsMap) {
+                //     allClicks += campaign.parentId != '-1' ? campaign.Clicks : 0;
+                // }
+                // return String(allClicks).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+                return String(this.vueStore.allClicksValue).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
             },
             
             allCoasts() {
-                let allCoasts = 0.0
-                for(const [key, campaign] of this.vueStore.campaignsMap) {
-                    allCoasts += campaign.parentId != '-1' ? parseFloat(campaign.Cost) : 0;
-                }
-                return allCoasts
+                // let allCoasts = 0.0
+                // for(const [key, campaign] of this.vueStore.campaignsMap) {
+                //     allCoasts += campaign.parentId != '-1' ? parseFloat(campaign.Cost) : 0;
+                // }
+                // return String(allCoasts.toFixed(2)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
+                return String(this.vueStore.allCostValue.toFixed(2)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
             },
 
             allImpressions() {
-                let allImpressions = 0
-                for(const [key, campaign] of this.vueStore.campaignsMap) {
-                    allImpressions += campaign.parentId != '-1' ? campaign.Impressions : 0;
-                }
-                return allImpressions
+                // let allImpressions = 0
+                // for(const [key, campaign] of this.vueStore.campaignsMap) {
+                //     allImpressions += campaign.parentId != '-1' ? campaign.Impressions : 0;
+                // }
+                // return String(allImpressions).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+                return String(this.vueStore.allImpressionsValue).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
             },
 
         },

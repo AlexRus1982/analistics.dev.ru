@@ -1,6 +1,11 @@
 export const VueStore = {
     loading             : false,
     groupsModalWindow   : null,
+
+    allCostValue        : 0.0,
+    allImpressionsValue : 0,
+    allClicksValue      : 0,
+
     campaignsMap        : new Map(),
     groupsMap           : new Map(),
 
@@ -60,10 +65,18 @@ export const VueStore = {
                         'Impressions'           : 0,
                         'Clicks'                : 0,
 
+                        'CostPerc'              : 0,
+                        'ImpressionsPerc'       : 0,
+                        'ClicksPerc'            : 0,
+
+                        'CostStr'               : '',
+                        'ImpressionsStr'        : '',
+                        'ClicksStr'             : '',
+
                         'chosen'                : false, 
                         'campaignsExtednded'    : true, 
                         'groupsExtended'        : true,
-                        'tableGroupsExtended'   : true, 
+                        'tableGroupsExtended'   : false, 
                     })
                 }
                 resolve(true)
@@ -80,6 +93,14 @@ export const VueStore = {
                 } else {
                     console.debug(link)
                 }
+            }
+        }
+
+        const calcAllValues = () => {
+            for (const [key, campaign] of store.campaignsMap) {
+                store.allCostValue += campaign.parentId != '-1' ? campaign.Cost : 0;
+                store.allClicksValue += campaign.parentId != '-1' ? campaign.Clicks : 0;
+                store.allImpressionsValue += campaign.parentId != '-1' ? campaign.Impressions : 0;
             }
         }
 
@@ -105,6 +126,26 @@ export const VueStore = {
             }
         }
 
+        // const formatValuesOfCampaigns = () => {
+        //     for (const [key, campaign] of store.campaignsMap) {
+        //         campaign.Cost          = String(campaign.Cost.toFixed(2)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
+        //         campaign.Impressions   = String(campaign.Impressions).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+        //         campaign.Clicks        = String(campaign.Clicks).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+        //     }
+        // }
+
+        const formatValuesOfGroups = () => {
+            for (const [key, group] of store.groupsMap) {
+                group.CostPerc         = Number(100 * group.Cost / store.allCostValue);
+                group.ClicksPerc       = Number(100 * group.Clicks / store.allClicksValue);
+                group.ImpressionsPerc  = Number(100 * group.Impressions / store.allImpressionsValue);
+
+                group.CostStr          = String(group.Cost.toFixed(2)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
+                group.ImpressionsStr   = String(group.Impressions).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+                group.ClicksStr        = String(group.Clicks).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+            }
+        }
+
         Promise.all([
             yandexDirectInfoPromise,
             groupListPromise,
@@ -116,8 +157,10 @@ export const VueStore = {
             .then(({server_answer, links_list}) => {
                 if (server_answer == 'error') return
                 makeLinks(links_list)
+                calcAllValues()
                 calcValuesOfCampaignsInGroups()
                 calcValuesOfSubGroups()
+                formatValuesOfGroups()
                 store.loading = false
             })
             .catch(error => console.log("request failed", error))
