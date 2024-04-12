@@ -19,7 +19,7 @@
             <div>Загрузка ...</div>
         </div>
         <table v-if="vueStore.loading == false">
-            <tr style="position: sticky; top: 0px;">
+            <tr style="position: sticky; top: 0px; z-index: 10;">
                 <th class="name">Кампания</th>
                 <th>Цена с НДС</th>
                 <th>Показы</th>
@@ -27,10 +27,14 @@
             </tr>
             <tr>
                 <td class="name">
-                    <div class="name_expander">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                    <div class="name_expander" @click="onAllExpanderClick">
+                        <svg v-if="allExpander == false" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
                             <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
                             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        <svg v-if="allExpander == true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
                         </svg>
                     </div>
                     <div class="name_label">Всего</div>
@@ -39,12 +43,13 @@
                 <td>{{ allImpressions }}</td>
                 <td>{{ allClicks }}</td>
             </tr>
-            <tr v-for="[key, campaign] of vueStore.campaignsMap">
+            <!-- <tr v-if="allExpander == true" v-for="[key, campaign] of vueStore.campaignsMap">
                 <td class="name">{{ campaign.CampaignName }}</td>
                 <td>{{ campaign.Cost.toFixed(2) }}</td>
                 <td>{{ campaign.Impressions }}</td>
                 <td>{{ campaign.Clicks }}</td>
-            </tr>
+            </tr> -->
+            <table-list-item :groupId="-1" :isExtended="allExpander == true" :innerLevel="0"/>
         </table>
     </div>
 
@@ -115,13 +120,14 @@
                 }
                 th {
                     padding: 10px;
-                    font-size: 1.4rem;
+                    font-size: 1.1rem;
                     &.name {
-                        width: 40%;
+                        width: 75%;
                         text-align:left;
                     }
                     &:not(.name) {
-                        width: 20%;
+                        width: 200px;
+                        text-wrap: nowrap;
                     }
                 }
 
@@ -141,7 +147,7 @@
                         }
                     }
                     &:not(.name) {
-                        width: 20%;
+                        width: 200px;
                         text-align: right;
                     }
                 }
@@ -152,18 +158,21 @@
 </style>
 
 <script>
+    import {ref} from 'vue'
+    import TableListItem from './TableListItem.vue';
+
     export default {
         name: "TableList",
 
-        // components: {
-        //     'modal-group-dialog'   : ModalGroupDialog,
-        // },
+        components: {
+            'table-list-item'   : TableListItem,
+        },
 
         computed : {
             allClicks() {
                 let allClicks = 0
                 for(const [key, campaign] of this.vueStore.campaignsMap) {
-                    allClicks += campaign.Clicks;
+                    allClicks += campaign.parentId != '-1' ? campaign.Clicks : 0;
                 }
                 return allClicks
             },
@@ -171,7 +180,7 @@
             allCoasts() {
                 let allCoasts = 0.0
                 for(const [key, campaign] of this.vueStore.campaignsMap) {
-                    allCoasts += parseFloat(campaign.Cost);
+                    allCoasts += campaign.parentId != '-1' ? parseFloat(campaign.Cost) : 0;
                 }
                 return allCoasts
             },
@@ -179,7 +188,7 @@
             allImpressions() {
                 let allImpressions = 0
                 for(const [key, campaign] of this.vueStore.campaignsMap) {
-                    allImpressions += campaign.Impressions;
+                    allImpressions += campaign.parentId != '-1' ? campaign.Impressions : 0;
                 }
                 return allImpressions
             },
@@ -188,9 +197,11 @@
 
         setup(){
             const vueStore = window._vueStore;
+            const allExpander = ref(false)
 
             return {
                 vueStore,
+                allExpander,
             }
         },
 
@@ -203,6 +214,10 @@
             onPeriodChange(event) {
                 console.log(event.target.value)
                 window._vueStore.setup(event.target.value)
+            },
+
+            onAllExpanderClick() {
+                this.allExpander = !this.allExpander
             }
         }
     }

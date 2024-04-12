@@ -116,10 +116,11 @@ Route::get('/yandex-direct-info', function(Request $request) {
 
             "FieldNames" : [
                 "CampaignId",
-                "CampaignName", 
+                "CampaignName",
                 "Clicks", 
                 "Impressions", 
-                "Cost"
+                "Cost",
+                "CampaignType"
             ],
 
             "ReportName" : "test_otchet",
