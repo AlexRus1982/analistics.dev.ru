@@ -20,7 +20,7 @@ Route::get('/', function() {
 });
 
 Route::get('/yandex-direct-info', function(Request $request) {
-    logger($request->period);
+    // logger($request->period);
 
     $ReportsURL = 'https://api.direct.yandex.com/json/v5/reports';
 
@@ -155,7 +155,6 @@ Route::get('/yandex-direct-info', function(Request $request) {
     return($server_output);
 });
 
-
 Route::get('/groups-list', function() {
     $groups = DB::table('Groups')
     ->get();
@@ -238,6 +237,47 @@ Route::post('/group-add-to-group', function(Request $request) {
     }
 });
 
+Route::post('/group-remove-from-group', function(Request $request) {
+    try {
+        DB::table('Groups')
+        ->where('groupId', $request->groupId)
+        ->update(['parentGroupId' => -1]);
+
+        return response()->json([ 
+            "server_answer" => "success", 
+        ]);
+    } catch (Exception $e) {
+        return response()->json([ 
+            "server_answer" => "error", 
+            "error_text" => $e, 
+        ]);
+    }
+});
+
+Route::post('/group-set-order', function(Request $request) {
+    try {
+        $ordersList = $request->ordersList;
+
+        // logger($ordersList);
+
+        foreach($ordersList as $key => $value) {
+            DB::table('Groups')
+              ->where('groupId', $key)
+              ->update(['groupOrder' => $value]);
+        }
+
+        return response()->json([
+            "server_answer" => "success",
+        ]);
+    } catch (Exception $e) {
+        return response()->json([ 
+            "server_answer" => "error", 
+            "error_text" => $e, 
+        ]);
+    }
+});
+
+
 Route::post('/campaign-add-to-group', function(Request $request) {
     try {
         DB::table('GroupsCampaigns')
@@ -285,23 +325,6 @@ Route::get('/campaign-group-links', function() {
         return response()->json([ 
             "server_answer" => "success", 
             "links_list"    => $links,
-        ]);
-    } catch (Exception $e) {
-        return response()->json([ 
-            "server_answer" => "error", 
-            "error_text" => $e, 
-        ]);
-    }
-});
-
-Route::post('/group-remove-from-group', function(Request $request) {
-    try {
-        DB::table('Groups')
-        ->where('groupId', $request->groupId)
-        ->update(['parentGroupId' => -1]);
-
-        return response()->json([ 
-            "server_answer" => "success", 
         ]);
     } catch (Exception $e) {
         return response()->json([ 

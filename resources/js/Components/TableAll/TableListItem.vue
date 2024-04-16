@@ -14,7 +14,7 @@
                     <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
                 </svg>
             </div>
-            <div class="group_label">{{ group.groupName }}</div>
+            <div class="group_label" :tree_level="group.groupLevel">{{ group.groupName }}</div>
         </td>
         <td class="values_cell">
             <div class="back_cell" :style="{ width: group.CostPerc + '%' }"></div>
@@ -29,18 +29,6 @@
             <div class="front_cell">{{ group.ClicksStr }}</div>
         </td>
     </tr>
-
-    <!-- <tr v-if="isExtended && group && group.tableGroupsExtended && parentExtended" v-for="[key, campaign] of campaigns">
-        <td class="name">
-            <div v-for="i in innerLevel + 1" class="level_tab">
-                <div class="level_tab_line"></div>
-            </div>
-            <div class="group_label">{{ campaign.CampaignName }}</div>
-        </td>
-        <td>{{ String(campaign.Cost.toFixed(2)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}</td>
-        <td>{{ String(campaign.Impressions).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</td>
-        <td>{{ String(campaign.Clicks).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</td>
-    </tr> -->
 
     <TableListItem
         v-for="[key, childGroup] of groups"
@@ -154,7 +142,6 @@
 </style>
 
 <script>
-    import {ref} from 'vue'
     import { computed } from "vue";
 
     export default {
@@ -205,7 +192,11 @@
             });
 
             const groups = computed(() => {
-                const _groups = Array.from(vueStore.groupsMap).filter(value => value[1].parentGroupId == props.groupId)
+                const _groups = 
+                    Array
+                    .from(vueStore.groupsMap)
+                    .filter(value => value[1].parentGroupId == props.groupId)
+                    .sort((first, second) => first[1].groupOrder - second[1].groupOrder)
                 // console.debug(_groups)
                 return _groups
             });

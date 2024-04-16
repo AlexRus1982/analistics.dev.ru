@@ -64,7 +64,6 @@
         overflow-y: auto;
         width: calc(100% - 10px);
         height: 100%;
-        box-shadow: inset 0px 0px 8px #0004;
     }
 
     .modal {
@@ -124,7 +123,12 @@
 
         computed : {
             groupsMapArray() {
-                return Array.from(this.vueStore.groupsMap).filter(item => item[1].parentGroupId == "-1")
+                const array = Array
+                        .from(this.vueStore.groupsMap)
+                        .filter(item => item[1].parentGroupId == "-1")
+                        .sort((first, second) => first[1].groupOrder - second[1].groupOrder)
+                console.debug(array)
+                return  array
             },
 
             filteredHierarchyGroupArray() {

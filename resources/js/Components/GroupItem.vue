@@ -1,5 +1,15 @@
 <template>
-    <div class="group_item">
+    <div 
+        class="group_item" :class="[ borderedUp ? 'borderedUp' : false,  borderedDown ? 'borderedDown' : false, dragged ? 'dragged' : false ]"
+        :group_id="itemData.groupId"
+        draggable="true"
+        ref="item"
+
+        @dragstart.stop="onGroupDragStart($event, this)"
+        @dragover.stop="onGroupDragOver($event, this)"
+        @dragend.stop="onGroupDragEnd($event, this)"
+        @dragleave="onGroupDragLeave()"
+    >
         
         <group-item-title :itemData="itemData"/>
 
@@ -88,6 +98,18 @@
         //     box-shadow: 0px 0px 8px #59F;
         //     transform: scale(0.99);
         // }
+
+        &.borderedUp {
+            border-top: 5px solid #0F0;
+        }
+
+        &.borderedDown {
+            border-bottom: 5px solid #0F0;
+        }
+
+        &.dragged {
+            opacity: 0;
+        }
 
         .group_childs {
             background-color: #FFF;
@@ -186,7 +208,10 @@
             },
 
             groupsMapArray() {
-                return Array.from(this.vueStore.groupsMap).filter(item => item[1].parentGroupId == this.itemData.groupId)
+                return  Array
+                        .from(this.vueStore.groupsMap)
+                        .filter(item => item[1].parentGroupId == this.itemData.groupId)
+                        .sort((first, second) => first[1].groupOrder - second[1].groupOrder)
             },
         },
 
@@ -194,11 +219,19 @@
             const vueStore = window._vueStore;
             const itemsChildrenExpander = ref(true)
             const groupsChildrenExpander = ref(true)
+            
+            const borderedUp = ref(false)
+            const borderedDown = ref(false)
+            const dragged = ref(false)
 
             return {
                 vueStore,
                 itemsChildrenExpander,
                 groupsChildrenExpander,
+
+                borderedUp,
+                borderedDown,
+                dragged,
             }
         },
 
@@ -236,6 +269,127 @@
                     .catch(error => console.log("request failed", error));
                 }
             },
+
+            onGroupDragStart(dragEvent, element) {
+                // console.debug(dragEvent)
+                this.vueStore.draggedElement = element
+                dragEvent.dataTransfer.dropEffect = "move"
+                dragEvent.dataTransfer.effectAllowed = "move"
+                this.dragged = true
+            },
+
+            onGroupDragEnd(dragEvent, element) {
+                
+                this.borderedUp = false
+                this.borderedDown = false
+                this.dragged = false
+                if (this.vueStore.overedElement == null) return
+                if (this.vueStore.draggedElement == null) return
+
+                console.debug('drag end', this.vueStore.draggedElement.itemData, this.vueStore.overedElement.itemData, this.vueStore.dragElementHalf)
+
+                this.vueStore.draggedElement.itemData.groupOrder = 
+                this.vueStore.dragElementHalf ? 
+                this.vueStore.overedElement.itemData.groupOrder - 0.5 : 
+                this.vueStore.overedElement.itemData.groupOrder + 0.5
+
+                const parentGroupId = this.vueStore.overedElement.itemData.parentGroupId
+                const sortedGroups = Array
+                .from(this.vueStore.groupsMap)
+                .filter(item => item[1].parentGroupId == parentGroupId)
+                .sort((first, second) => first[1].groupOrder - second[1].groupOrder)
+
+                let order = 0
+                const ordersList = {}
+                for (const [key, group] of sortedGroups) {
+                    ordersList[`${group.groupId}`] = order
+                    group.groupOrder = order++
+                }
+
+                console.debug(ordersList)
+                fetch(`/group-set-order`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept'       : 'application/json',
+                        'Content-Type' : 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'ordersList'   : ordersList,
+                    })
+                })
+                .then(response => response.json())
+                .then(response => console.debug(response))
+                .catch(error => console.log("request failed", error));
+
+                this.vueStore.dragElementHalf = null
+                this.vueStore.overedElement = null
+                this.vueStore.draggedElement == null
+            },
+
+            onGroupDragOver(dragEvent, element) {
+                if (element == this.vueStore.draggedElement) return
+
+                if (element.itemData.groupLevel != this.vueStore.draggedElement.itemData.groupLevel || 
+                    element.itemData.parentGroupId != this.vueStore.draggedElement.itemData.parentGroupId) return
+
+                function getCoords(elem) {
+                    // (1)
+                    let box = elem.getBoundingClientRect();
+
+                    let body = document.body;
+                    let docEl = document.documentElement;
+
+                    // (2)
+                    let scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+                    let scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+                    // (3)
+                    let clientTop = docEl.clientTop || body.clientTop || 0;
+                    let clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+                    // (4)
+                    let top = box.top + scrollTop - clientTop;
+                    let left = box.left + scrollLeft - clientLeft;
+
+                    return {
+                        top: top,
+                        left: left
+                    };
+                }
+
+                const firstHalf = (dragEvent.clientY - getCoords(this.$refs.item).top) <= this.$refs.item.getBoundingClientRect().height * 0.5
+                this.borderedUp = firstHalf ? true : false
+                this.borderedDown = firstHalf ? false : true
+                dragEvent.dataTransfer.dropEffect = "move"
+                dragEvent.dataTransfer.effectAllowed = "move"
+
+                this.vueStore.overedElement = element
+                this.vueStore.dragElementHalf = firstHalf
+
+                // console.debug('drag over', this.vueStore.draggedElement, this.vueStore.overedElement, this.vueStore.dragElementHalf)
+
+                // console.debug(getCoords(this.$refs.item).top, dragEvent)
+
+                // console.debug((dragEvent.clientY - getCoords(this.$refs.item).top) > this.$refs.item.getBoundingClientRect().height * 0.5)
+                // console.debug(dragEvent.offsetY)
+                // dragEvent.preventDefault()
+                // dragEvent.stopPropogation()
+
+            },
+
+            onGroupDragLeave() {
+                this.borderedUp = false
+                this.borderedDown = false
+
+                // this.vueStore.dragElementHalf = null
+                // this.vueStore.overedElement = null
+                // this.vueStore.draggedElement == null
+            },
+
+            // onGroupDrop(dragEvent, element) {
+            //     console.debug(element)
+            // },
+
         }
     }
 </script>

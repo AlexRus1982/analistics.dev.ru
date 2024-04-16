@@ -9,15 +9,30 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])        
     </head>
     <style>
+        @font-face {
+            font-family: 'Arial'; 
+            src: local('Arial'), url(/fonts/arial/arialmt.ttf); 
+        }
+
+        @font-face {
+            font-family: 'Roboto'; 
+            src: local('Roboto'), url(/fonts/roboto/Roboto-Light.ttf); 
+        }
+
         html, body {
+            font-family: 'Arial', Arial, sans-serif;
+            /* font-family: "Roboto", sans-serif; */
+            font-size: 16px;
             margin: 0px;
             padding: 0px;
-            background: #FFF;
+            background: #F1F2F2;
         }
 
         body {
-            padding: 20px;
+            padding: 0px;
+            margin: 0px;
             display: flex;
+            justify-content: center
         }
     </style>
     <body id="app">
