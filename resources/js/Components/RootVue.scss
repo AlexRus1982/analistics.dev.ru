@@ -116,6 +116,7 @@
             .table_header {
                 display: flex;
                 flex-direction: row;
+                width: 800px;
     
                 .table_header_item {
                     width: 134px;
@@ -164,7 +165,7 @@
     
                     .tab_panel_left, .tab_panel_right {
                         display: flex;
-                        padding: 10px;
+                        padding: 10px 10px;
                         gap:10px;
                     }
     

@@ -17,7 +17,7 @@
     .hubs_groups {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         width: 100%;
 
         .table_header, .table_row {

@@ -33,7 +33,7 @@
         margin-top: 10px;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         width: 100%;
 
         .table_row:first-child {
