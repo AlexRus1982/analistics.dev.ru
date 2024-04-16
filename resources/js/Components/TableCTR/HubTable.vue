@@ -6,12 +6,12 @@
                 {{ group.groupName }}
             </div>
             <div class="table_row_item">
-                <div class="back_cell" :style="{ width: group.CostPerc + '%' }"></div>
-                <div class="front_cell">{{ group.CostStr }}</div>
+                <div class="back_cell" :style="{ width: group.ClicksPerc + '%' }"></div>
+                <div class="front_cell">{{ group.ClicksStr }}</div>
             </div>
-            <div v-if="(group.Cost / group.Impressions)" class="table_row_item_bubble_wrapper">
+            <div v-if="(100 * group.Clicks / group.Impressions)" class="table_row_item_bubble_wrapper">
                 <div class="table_row_item_bubble">
-                    {{ String((group.Cost / group.Impressions).toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}
+                    {{ String((100 * group.Clicks / group.Impressions).toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' %' }}
                 </div>
             </div>
             <div class="table_row_item">
@@ -22,10 +22,10 @@
 
         <div class="table_footer">
             <div class="table_footer_item">Итого</div>
-            <div class="table_footer_item">{{ allCoasts }}</div>
-            <div v-if="(vueStore.allCostValue / vueStore.allImpressionsValue)" class="table_row_item_bubble_wrapper">
+            <div class="table_footer_item">{{ allClicks }}</div>
+            <div v-if="(100 * vueStore.allClicksValue / vueStore.allImpressionsValue)" class="table_row_item_bubble_wrapper">
                 <div class="table_row_item_bubble">
-                    {{ String((vueStore.allCostValue / vueStore.allImpressionsValue).toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}
+                    {{ String((100 * vueStore.allClicksValue / vueStore.allImpressionsValue).toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' %' }}
                 </div>
             </div>
             <div class="table_footer_item">{{ allImpressions }}</div>

@@ -14,8 +14,8 @@
             <div class="name_label">{{ group.groupName }}</div>
         </div>
         <div class="table_row_item">
-            <div class="back_cell" :style="{ width: group.CostPerc + '%' }"></div>
-            <div class="front_cell">{{ group.CostStr }}</div>
+            <div class="back_cell" :style="{ width: group.ClicksPerc + '%' }"></div>
+            <div class="front_cell">{{ group.ClicksStr }}</div>
         </div>
 
         <div v-if="groupCTR != ''" class="table_row_item_bubble_wrapper">
@@ -36,13 +36,13 @@
             {{ campaign.CampaignName }}
         </div>
         <div class="table_row_item">
-            <div class="back_cell" :style="{ width: campaign.CostPerc + '%' }"></div>
-            <div class="front_cell">{{ campaign.CostStr }}</div>
+            <div class="back_cell" :style="{ width: campaign.ClicksPerc + '%' }"></div>
+            <div class="front_cell">{{ campaign.ClicksStr }}</div>
         </div>
 
-        <div v-if="(campaign.Cost / campaign.Impressions)" class="table_row_item_bubble_wrapper">
+        <div v-if="(100 * campaign.Clicks / campaign.Impressions)" class="table_row_item_bubble_wrapper">
             <div class="table_row_item_bubble">
-                {{ String((campaign.Cost / campaign.Impressions).toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}
+                {{ String((100 * campaign.Clicks / campaign.Impressions).toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' %' }}
             </div>
         </div>
 
@@ -181,9 +181,9 @@
 
             groupCTR(){
                 const group = this.vueStore.groupsMap.get(`${this.groupId}`)
-                const ctr = group.Cost / group.Impressions
+                const ctr = 100 * group.Clicks / group.Impressions
                 
-                return ctr ? String(ctr.toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' : ''
+                return ctr ? String(ctr.toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' %' : ''
             },
 
             campaigns(){
