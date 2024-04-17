@@ -6,8 +6,8 @@
                 {{ group.groupName }}
             </div>
             <div class="table_row_item">
-                <div class="back_cell" :style="{ width: group.ClicksPerc + '%' }"></div>
-                <div class="front_cell">{{ group.ClicksStr }}</div>
+                <div class="back_cell" :style="{ width: group.ImpressionsPerc + '%' }"></div>
+                <div class="front_cell">{{ group.ImpressionsStr }}</div>
             </div>
             <div v-if="(100 * group.Clicks / group.Impressions)" class="table_row_item_bubble_wrapper">
                 <div class="table_row_item_bubble">
@@ -15,20 +15,20 @@
                 </div>
             </div>
             <div class="table_row_item">
-                <div class="back_cell" :style="{ width: group.ImpressionsPerc + '%' }"></div>
-                <div class="front_cell">{{ group.ImpressionsStr }}</div>
+                <div class="back_cell" :style="{ width: group.ClicksPerc + '%' }"></div>
+                <div class="front_cell">{{ group.ClicksStr }}</div>
             </div>
         </div>
 
         <div class="table_footer">
             <div class="table_footer_item">Итого</div>
-            <div class="table_footer_item">{{ allClicks }}</div>
+            <div class="table_footer_item">{{ allImpressions }}</div>
             <div v-if="(100 * vueStore.allClicksValue / vueStore.allImpressionsValue)" class="table_row_item_bubble_wrapper">
                 <div class="table_row_item_bubble">
                     {{ String((100 * vueStore.allClicksValue / vueStore.allImpressionsValue).toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' %' }}
                 </div>
             </div>
-            <div class="table_footer_item">{{ allImpressions }}</div>
+            <div class="table_footer_item">{{ allClicks }}</div>
         </div>
     </div>
 </template>

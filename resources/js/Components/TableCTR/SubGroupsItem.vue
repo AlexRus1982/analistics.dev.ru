@@ -14,8 +14,8 @@
             <div class="name_label">{{ group.groupName }}</div>
         </div>
         <div class="table_row_item">
-            <div class="back_cell" :style="{ width: group.ClicksPerc + '%' }"></div>
-            <div class="front_cell">{{ group.ClicksStr }}</div>
+            <div class="back_cell" :style="{ width: group.ImpressionsPerc + '%' }"></div>
+            <div class="front_cell">{{ group.ImpressionsStr }}</div>
         </div>
 
         <div v-if="groupCTR != ''" class="table_row_item_bubble_wrapper">
@@ -25,8 +25,8 @@
         </div>
 
         <div class="table_row_item">
-            <div class="back_cell" :style="{ width: group.ImpressionsPerc + '%' }"></div>
-            <div class="front_cell">{{ group.ImpressionsStr }}</div>
+            <div class="back_cell" :style="{ width: group.ClicksPerc + '%' }"></div>
+            <div class="front_cell">{{ group.ClicksStr }}</div>
         </div>
     </div>
 
@@ -36,8 +36,8 @@
             {{ campaign.CampaignName }}
         </div>
         <div class="table_row_item">
-            <div class="back_cell" :style="{ width: campaign.ClicksPerc + '%' }"></div>
-            <div class="front_cell">{{ campaign.ClicksStr }}</div>
+            <div class="back_cell" :style="{ width: campaign.ImpressionsPerc + '%' }"></div>
+            <div class="front_cell">{{ campaign.ImpressionsStr }}</div>
         </div>
 
         <div v-if="(100 * campaign.Clicks / campaign.Impressions)" class="table_row_item_bubble_wrapper">
@@ -47,9 +47,10 @@
         </div>
 
         <div class="table_row_item">
-            <div class="back_cell" :style="{ width: campaign.ImpressionsPerc + '%' }"></div>
-            <div class="front_cell">{{ campaign.ImpressionsStr }}</div>
+            <div class="back_cell" :style="{ width: campaign.ClicksPerc + '%' }"></div>
+            <div class="front_cell">{{ campaign.ClicksStr }}</div>
         </div>
+
     </div>
 </template>
 

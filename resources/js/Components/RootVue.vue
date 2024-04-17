@@ -39,8 +39,8 @@
             <div v-if="vueStore.loading == false && activeTab == 2" class="table_header_wrapper">
                 <div class="table_header">
                     <div class="table_header_item" style="width: 280px;">Категория</div>
-                    <div class="table_header_item">Кликов</div>
                     <div class="table_header_item">Показов</div>
+                    <div class="table_header_item">Кликов</div>
                 </div>
             </div>
 
