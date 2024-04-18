@@ -125,7 +125,7 @@
         computed : {
             group(){
                 const group = this.vueStore.groupsMap.get(`${this.groupId}`)
-                console.debug('===>', this.groupId, group)
+                // console.debug('===>', this.groupId, group)
                 return group
             },
 

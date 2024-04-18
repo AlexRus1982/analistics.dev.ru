@@ -13,6 +13,7 @@ export const VueStore = {
 
     campaignsMap        : new Map(),
     groupsMap           : new Map(),
+    costsMap            : new Map(),
 
     // period = 'YESTERDAY', 'LAST_WEEK', 'THIS_MONTH'
     setup               : async function(period = 'YESTERDAY') {
@@ -51,6 +52,61 @@ export const VueStore = {
                 })
             
                 console.debug(store.campaignsMap);
+                resolve(true)
+            })
+            .catch(error => console.log("request failed", error));
+        })
+
+        const yandexDirectCostPromise = new Promise((resolve, reject) => {
+            fetch(`/yandex-direct-cost`)
+            .then(response => response.text())
+            .then(text => {
+                const lines = text.split('\n').slice(1, -2);
+                const header = lines.shift().split('\t');
+                console.debug(header);
+
+                const costs = new Map()
+                lines.forEach(line => {
+                    const lineArray = line.split('\t');
+            
+                    const costDate = lineArray[0].trim();
+                    const costValue = parseFloat(lineArray[1].trim()) / 1000000
+                    const costOldValue = costs.get(`${costDate}`)
+                    if (costOldValue) {
+                        costs.set(`${costDate}`, costOldValue + costValue)
+                    }
+                    else {
+                        costs.set(`${costDate}`, costValue)
+                    }
+                })
+
+                const costsMonth = []
+                for(const [key, value] of costs) {
+                    costsMonth.push(key.split('-')[1])
+                }
+                const costsMonthUniq = new Set(costsMonth)
+                console.debug(costsMonthUniq)
+
+                const costsByMonth = new Map()
+
+                for(const month of costsMonthUniq) {
+                    const monthCoasts = Array
+                    .from(costs)
+                    .filter(value => value[0].split('-')[1] == month)
+
+                    const monthCoastsObj = {}
+                    for(const value of monthCoasts) {
+                        const keyData = new Date(`${value[0]}`).toLocaleString('ru', {
+                            month: 'long',
+                            day: 'numeric'
+                          });
+                        monthCoastsObj[`${keyData}`] = parseInt(value[1])
+                    }
+                    costsByMonth.set(`${month}`, monthCoastsObj)
+                }
+
+                store.costsMap = new Map([...costsByMonth])
+                console.debug(store.costsMap)
                 resolve(true)
             })
             .catch(error => console.log("request failed", error));
@@ -138,8 +194,8 @@ export const VueStore = {
 
         const formatValuesOfCampaigns = () => {
             for (const [key, campaign] of store.campaignsMap) {
-                campaign.CPC                = campaign.Cost / campaign.Clicks;
-                campaign.CPR                = campaign.Cost / campaign.Impressions;
+                campaign.CPC                = campaign.Clicks != 0 ? campaign.Cost / campaign.Clicks : 0;
+                campaign.CTR                = campaign.Impressions != 0 ? 100 * campaign.Clicks / campaign.Impressions : 0;
 
                 campaign.CostPerc           = Number(100 * campaign.Cost / store.allCostValue);
                 campaign.ClicksPerc         = Number(100 * campaign.Clicks / store.allClicksValue);
@@ -154,7 +210,7 @@ export const VueStore = {
         const formatValuesOfGroups = () => {
             for (const [key, group] of store.groupsMap) {
                 group.CPC              = group.Cost / group.Clicks;
-                group.CPR              = group.Cost / group.Impressions;
+                group.CTR              = 100 * group.Clicks / group.Impressions;
 
                 group.CostPerc         = Number(100 * group.Cost / store.allCostValue);
                 group.ClicksPerc       = Number(100 * group.Clicks / store.allClicksValue);
@@ -188,6 +244,7 @@ export const VueStore = {
 
         Promise.all([
             yandexDirectInfoPromise,
+            yandexDirectCostPromise,
             groupListPromise,
         ]).then(results => {
             console.debug('make links')

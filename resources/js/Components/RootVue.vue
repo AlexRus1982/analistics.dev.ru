@@ -15,7 +15,8 @@
                     <div class="tab_button" :class="activeTab == 0 ? 'active' : false" @click="setActiveTab(0)">Все</div>
                     <div class="tab_button" :class="activeTab == 1 ? 'active' : false" @click="setActiveTab(1)">CPC</div>
                     <div class="tab_button" :class="activeTab == 2 ? 'active' : false" @click="setActiveTab(2)">CTR</div>
-                    <div class="tab_button" :class="activeTab == 3 ? 'active' : false" @click="setActiveTab(3)">Конструктор</div>
+                    <div class="tab_button" :class="activeTab == 3 ? 'active' : false" @click="setActiveTab(3)">Статистика</div>
+                    <div class="tab_button" :class="activeTab == 4 ? 'active' : false" @click="setActiveTab(4)">Конструктор</div>
                 </div>
             </div>
 
@@ -44,6 +45,18 @@
                 </div>
             </div>
 
+            <div v-if="vueStore.loading == false && activeTab == 3" class="table_header_wrapper">
+                <div class="table_header">
+                    <div class="table_header_item" style="width: 211px; padding-left: 5px; padding-right: 5px">Тип кампании</div>
+                    <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">Кол-во</div>
+                    <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">Траты</div>
+                    <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">Показов</div>
+                    <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">Кликов</div>
+                    <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">CPC</div>
+                    <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">CTR</div>
+                </div>
+            </div>
+
             <div v-if="vueStore.loading == true" class="pre_loader">
                 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
                     <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
@@ -69,8 +82,13 @@
                         <table-list-ctr/>
                     </div>
 
+                    <!-- Таблица Статистика-->
+                    <div v-if="vueStore.loading == false && activeTab == 3" class="tab_panel table" :class="activeTab == 3 ? 'active' : false" >
+                        <cost-table/>
+                    </div>
+
                     <!-- Конструктор -->
-                    <div v-if="vueStore.loading == false && activeTab == 3" class="tab_panel constructor" :class="activeTab == 3 ? 'active' : false">
+                    <div v-if="vueStore.loading == false && activeTab == 4" class="tab_panel constructor" :class="activeTab == 4 ? 'active' : false">
                         <!-- left -->
                         <div class="tab_panel_left"><groups-list/></div>
     
@@ -94,6 +112,7 @@
     import TableListCTR from './TableCTR/TableListCTR.vue';
     import GroupsList from './GroupsList.vue';
     import CampaignList from './CampaignList.vue';
+    import CostTable from './Statistics/CostTable.vue';
 
     export default {
         name: "RootVue",
@@ -104,6 +123,7 @@
             'table-list-ctr'    : TableListCTR,
             'groups-list'       : GroupsList,
             'campaign-list'     : CampaignList,
+            'cost-table'        : CostTable,
         },
 
         setup(){
