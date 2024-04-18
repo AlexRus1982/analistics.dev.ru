@@ -97,7 +97,7 @@ export const VueStore = {
                     const monthCoastsObj = {}
                     for(const value of monthCoasts) {
                         const keyData = new Date(`${value[0]}`).toLocaleString('ru', {
-                            month: 'long',
+                            month: 'short',
                             day: 'numeric'
                           });
                         monthCoastsObj[`${keyData}`] = parseInt(value[1])
