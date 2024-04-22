@@ -4,9 +4,19 @@
         
         <div class="table_row" v-for="item in statistics.campaignsTypesList">
             <div class="table_row_item">{{ getCampaignType(item.Type) }}</div>
-            <div class="table_row_item">{{ String(item.Cost.toFixed(0)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}</div>
-            <div class="table_row_item">{{ String(item.Impressions).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
-            <div class="table_row_item">{{ String(item.Clicks).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
+            <div class="table_row_item">
+                <div class="back_cell" :style="{ width: item.CostPerc + '%' }"></div>
+                <div class="front_cell">{{ String(item.Cost.toFixed(0)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}</div>
+            </div>
+            <div class="table_row_item">
+                <div class="back_cell" :style="{ width: item.ImpressionsPerc + '%' }"></div>
+                <div class="front_cell">{{ String(item.Impressions).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
+            </div>
+            <div class="table_row_item">
+                <div class="back_cell" :style="{ width: item.ClicksPerc + '%' }"></div>
+                <div class="front_cell">{{ String(item.Clicks).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
+            </div>
+
             <div class="table_row_item">{{ String(item.Count).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
             <div class="table_row_item">{{ String(item.CPC.toFixed(1)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}</div>
             <div class="table_row_item">{{ String(item.CTR.toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' %' }}</div>
@@ -60,6 +70,7 @@
             position: relative;
 
             .table_row_item, .table_footer_item {
+                position: relative;
                 font-size: 0.75rem;
                 width: 89px;
                 height: 40px;
@@ -73,8 +84,15 @@
 
                 &:first-child {
                     width: 177px;
+
                 }
 
+                &:nth-child(2) {
+                    .back_cell {
+                        background-color: #fbceb57F;
+                    }
+                }
+                
                 &:last-child {
                     justify-content: end;
                 }
@@ -82,6 +100,29 @@
                 &:nth-last-child(3) {
                     margin-left: 10px;
                     border-left: 1px solid #A2A2A2;
+                }
+
+                .back_cell {
+                    position: absolute;
+                    top: 0px;
+                    left: 0px;
+                    height: 100%;
+                    width: 75%;
+                    background-color: #b5fbdd7F;
+                    z-index: 1;
+                }
+
+                .front_cell {
+                    position: absolute;
+                    display: flex;
+                    top: 0px;
+                    // left: 10px;
+                    height: 100%;
+                    width: 100%;
+                    z-index: 2;
+                    align-items: center;
+                    justify-content: flex-start;
+                    text-wrap: nowrap;
                 }
             }
 
@@ -212,6 +253,15 @@
 
                 statistics.campaignsTypesResult.CPC += statistics.campaignsTypesResult.Clicks ? statistics.campaignsTypesResult.Cost / statistics.campaignsTypesResult.Clicks : 0
                 statistics.campaignsTypesResult.CTR += statistics.campaignsTypesResult.Impressions != 0 ? 100 * statistics.campaignsTypesResult.Clicks / statistics.campaignsTypesResult.Impressions : 0
+
+                for(const campaignsType of uniqCampaignsTypes) {
+
+                    const campaignsStatisticObject = statistics.campaignsTypesList[`${campaignsType}`]
+
+                    campaignsStatisticObject.CostPerc           = Number(100 * campaignsStatisticObject.Cost / statistics.campaignsTypesResult.Cost);
+                    campaignsStatisticObject.ImpressionsPerc    = Number(100 * campaignsStatisticObject.Impressions / statistics.campaignsTypesResult.Impressions);
+                    campaignsStatisticObject.ClicksPerc         = Number(100 * campaignsStatisticObject.Clicks / statistics.campaignsTypesResult.Clicks);
+                }
 
                 return statistics
             },
