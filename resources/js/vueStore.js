@@ -100,7 +100,7 @@ export const VueStore = {
                             month: 'short',
                             day: 'numeric'
                           });
-                        monthCoastsObj[`${keyData}`] = parseInt(value[1])
+                        monthCoastsObj[`${keyData}`] = parseInt(value[1])//String(parseInt(value[1])).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
                     }
                     costsByMonth.set(`${month}`, monthCoastsObj)
                 }

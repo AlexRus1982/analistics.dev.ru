@@ -47,11 +47,11 @@
 
             <div v-if="vueStore.loading == false && activeTab == 3" class="table_header_wrapper" style="position: relative; top: 0px; z-index: 0;">
                 <div class="table_header">
-                    <div class="table_header_item" style="width: 211px; padding-left: 5px; padding-right: 5px">Тип кампании</div>
-                    <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">Кол-во</div>
+                    <div class="table_header_item" style="width: 200px; padding-left: 5px; padding-right: 5px">Тип кампании</div>
                     <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">Траты</div>
                     <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">Показов</div>
                     <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">Кликов</div>
+                    <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px; margin-left: 10px;">Кол-во</div>
                     <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">CPC</div>
                     <div class="table_header_item" style="width: 100px; padding-left: 5px; padding-right: 5px">CTR</div>
                 </div>
