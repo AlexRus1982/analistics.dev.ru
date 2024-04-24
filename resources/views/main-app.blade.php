@@ -36,6 +36,6 @@
         }
     </style>
     <body id="app">
-        <root-vue></root-vue>
+        <app-vue />
     </body>
 </html>

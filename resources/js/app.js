@@ -6,15 +6,40 @@ window._vueStore = reactive(VueStore)
 window._vueStore.setup()
 
 import { createApp } from 'vue/dist/vue.esm-bundler';
-import RootVue from './Components/RootVue.vue';
+import AppVue from './Components/app.vue';
 
 import VueChartkick from 'vue-chartkick'
 import 'chartkick/chart.js'
 
+import { 
+    createWebHistory, 
+    createRouter,
+}                               from "vue-router";
+
+const routes = [
+    {
+        path            : "/",
+        component       : () => import('./Components/RootVue.vue'),
+    },
+
+    {
+        path            : "/telegram-analistics/",
+        component       : () => import('./Components/TelegramAnalistics.vue'),
+    },
+];
+  
+const router = createRouter({
+    history: createWebHistory(),
+    routes,
+});
+
 const app = createApp({
     components: {
-        'root-vue' : RootVue,
+        'app-vue' : AppVue,
     }
 });
 
-app.use(VueChartkick).mount('#app');
+app
+.use(router)
+.use(VueChartkick)
+.mount('#app');

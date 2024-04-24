@@ -147,4 +147,4 @@
             },
         }
     }
-</script>./TableAll/TableList.vue./TableCPC/TableListCPC.vue
+</script>

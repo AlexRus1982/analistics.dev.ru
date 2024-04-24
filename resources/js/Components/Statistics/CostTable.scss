@@ -1,0 +1,142 @@
+.table {
+    overflow-x: hidden;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+
+    .table_row:first-child {
+        
+        .table_row_item {
+            border-top: 1px solid #A2A2A2;
+        }
+    }
+
+    .table_row, .table_footer {
+        display: flex;
+        flex-direction: row;
+        position: relative;
+
+        .table_row_item, .table_footer_item {
+            position: relative;
+            font-size: 0.75rem;
+            width: 89px;
+            height: 40px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            background-color: #F1F2F2;
+            padding-left: 5px;
+            padding-right: 5px;
+
+            &:first-child {
+                width: 177px;
+
+            }
+
+            &:nth-child(2) {
+                .back_cell {
+                    background-color: #fbceb57F;
+                }
+            }
+            
+            &:last-child {
+                justify-content: end;
+            }
+
+            &:nth-last-child(3) {
+                margin-left: 10px;
+                border-left: 1px solid #A2A2A2;
+            }
+
+            .back_cell {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                height: 100%;
+                width: 75%;
+                background-color: #b5fbdd7F;
+                z-index: 1;
+            }
+
+            .front_cell {
+                position: absolute;
+                display: flex;
+                top: 0px;
+                // left: 10px;
+                height: 100%;
+                width: 100%;
+                z-index: 2;
+                align-items: center;
+                justify-content: flex-start;
+                text-wrap: nowrap;
+            }
+        }
+
+
+        .table_row_item, .table_footer_item {
+            background-color: #FFF;
+
+            &:last-child {
+                .front_cell {
+                    justify-content: flex-end;
+                }
+            }
+        }
+    }
+
+    .table_footer, .table_row {
+        
+        .table_footer_item, .table_row_item {
+            border-right: 1px solid #A2A2A2;
+            border-bottom: 1px solid #A2A2A2;
+
+            &:first-child {
+                border-left: 1px solid #A2A2A2;
+            }
+        }
+    }
+
+    .table_footer {
+        
+        .table_footer_item {
+            background: #C4C4C4;
+            font-weight: 600;
+        }
+    }
+
+    .charts_title {
+        margin-top: 40px;
+        padding: 10px;
+        font-size: 1.3rem;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .charts_table_wrapper {
+        width: 100%;
+        max-width: 800px;
+
+        .charts_table {
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 800px;
+
+            &:last-child {
+                background-color: #fbceb54F;
+            }
+        }
+    }
+
+    .last_day_coast {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+}

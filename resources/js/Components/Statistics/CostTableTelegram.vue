@@ -2,48 +2,14 @@
 
     <div v-if="vueStore.loading == false" class="table">
         
-        <div class="table_row" v-for="item in statistics.campaignsTypesList">
-            <div class="table_row_item">{{ getCampaignType(item.Type) }}</div>
-            <div class="table_row_item">
-                <div class="back_cell" :style="{ width: item.CostPerc + '%' }"></div>
-                <div class="front_cell">{{ String(item.Cost.toFixed(0)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}</div>
-            </div>
-            <div class="table_row_item">
-                <div class="back_cell" :style="{ width: item.ImpressionsPerc + '%' }"></div>
-                <div class="front_cell">{{ String(item.Impressions).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
-            </div>
-            <div class="table_row_item">
-                <div class="back_cell" :style="{ width: item.ClicksPerc + '%' }"></div>
-                <div class="front_cell">{{ String(item.Clicks).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
-            </div>
-
-            <div class="table_row_item">{{ String(item.Count).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
-            <div class="table_row_item">{{ String(item.CPC.toFixed(1)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}</div>
-            <div class="table_row_item">{{ String(item.CTR.toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' %' }}</div>
-        </div>
-
-        <div class="table_footer">
-            <div class="table_footer_item">Итого</div>
-            <div class="table_footer_item">{{ String(statistics.campaignsTypesResult.Cost.toFixed(0)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}</div>
-            <div class="table_footer_item">{{ String(statistics.campaignsTypesResult.Impressions).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
-            <div class="table_footer_item">{{ String(statistics.campaignsTypesResult.Clicks).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
-            <div class="table_footer_item">{{ String(statistics.campaignsTypesResult.Count).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") }}</div>
-            <div class="table_footer_item">{{ String(statistics.campaignsTypesResult.CPC.toFixed(1)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}</div>
-            <div class="table_footer_item">{{ String(statistics.campaignsTypesResult.CTR.toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' %' }}</div>
-        </div>
-
-        <div class="charts_title">Общая динамика трат по месяцам:</div>
-
         <div class="charts_table_wrapper">
-            <div class="charts_table" v-for="[key, coastsValues] of vueStore.costsMap">
+            <div class="charts_table">
                 <!-- <div class="chart_title">{{ getMonth(key) }}</div> -->
-                <line-chart :title="getMonth(key)" :data="coastsValues" suffix=" ₽" thousands=" "></line-chart>
+                <line-chart :title="getMonth(lastMonth[0])" :data="lastMonth[1]" suffix=" ₽" thousands=" "></line-chart>
             </div>
         </div>
 
         <div class="last_day_coast">Траты за вчерашний день = {{ lastDayValue }}</div>
-
-        <!-- <line-chart :data="{'Января' : 2, 'Февраля' : 4 }"></line-chart> -->
     </div>
 </template>
 
@@ -53,7 +19,7 @@
 
 <script>
     export default {
-        name: "CostTable",
+        name: "CostTableTelegram",
 
         computed : {
             statistics() {
@@ -129,6 +95,13 @@
                 const lastMonth = Array.from(this.vueStore.costsMap.values()).pop();
                 const lastDayCoast = Object.values(lastMonth).slice(-2, -1)[0];
                 return String(lastDayCoast).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
+            },
+
+            lastMonth() {
+                const lastMonthKey = Array.from(this.vueStore.costsMap.keys()).pop();
+                const lastMonth = Array.from(this.vueStore.costsMap.values()).pop();
+                console.debug(lastMonthKey, lastMonth)
+                return [lastMonthKey, lastMonth]
             },
 
         },

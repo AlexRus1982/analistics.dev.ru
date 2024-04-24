@@ -17,7 +17,11 @@ use Illuminate\Support\Facades\DB;
 
 Route::get('/', function() {
     return view('main-app');
-});
+})->name('index');
+
+Route::get('/telegram-analistics', function() {
+    return view('main-app');
+})->name('analistics.telegram.page');
 
 Route::get('/yandex-direct-info', function(Request $request) {
     // logger($request->period);
