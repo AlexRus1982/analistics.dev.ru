@@ -44,7 +44,7 @@
                         <cost-table-telegram/>
                     </div>
 
-                    <div v-if="vueStore.loading == false" class="block_title">Данные за вчерашний день</div>
+                    <div v-if="vueStore.loading == false" class="block_title">Данные за вчерашний день - {{ yesterday }}</div>
 
                     <!-- Таблица Все-->
                     <div v-if="vueStore.loading == false">
@@ -100,6 +100,19 @@
                 activeTab,
                 vueStore,
             }
+        },
+
+        computed : {
+            yesterday : function() {
+                let yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+
+                return yesterday.toLocaleString('ru', {
+                    day     : 'numeric',
+                    month   : 'long',
+                    year    : 'numeric',
+                });
+            },
         },
 
         methods:{
