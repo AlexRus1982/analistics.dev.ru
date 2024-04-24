@@ -3,8 +3,8 @@
     "file": "assets/SubGroupsTable-ByJ08L-g.css",
     "src": "_SubGroupsTable-!~{005}~.js"
   },
-  "_SubGroupsTable-BUS1eAMO.js": {
-    "file": "assets/SubGroupsTable-BUS1eAMO.js",
+  "_SubGroupsTable-BNiOYjtS.js": {
+    "file": "assets/SubGroupsTable-BNiOYjtS.js",
     "name": "SubGroupsTable",
     "imports": [
       "resources/js/app.js"
@@ -20,12 +20,12 @@
     "isEntry": true
   },
   "resources/js/Components/RootVue.vue": {
-    "file": "assets/RootVue-UZcPuRd3.js",
+    "file": "assets/RootVue-DIwgWTeR.js",
     "name": "RootVue",
     "src": "resources/js/Components/RootVue.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_SubGroupsTable-BUS1eAMO.js",
+      "_SubGroupsTable-BNiOYjtS.js",
       "resources/js/app.js"
     ],
     "css": [
@@ -33,20 +33,20 @@
     ]
   },
   "resources/js/Components/TelegramAnalistics.vue": {
-    "file": "assets/TelegramAnalistics-Bpyd_0pk.js",
+    "file": "assets/TelegramAnalistics-MfWT8BxR.js",
     "name": "TelegramAnalistics",
     "src": "resources/js/Components/TelegramAnalistics.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_SubGroupsTable-BUS1eAMO.js",
+      "_SubGroupsTable-BNiOYjtS.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/TelegramAnalistics-BVB0PnkA.css"
+      "assets/TelegramAnalistics-gVPkfSrr.css"
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-m3eEc01u.js",
+    "file": "assets/app-DdKmYkMH.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
