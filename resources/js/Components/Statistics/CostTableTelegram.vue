@@ -93,7 +93,7 @@
 
             lastDayValue() {
                 const lastMonth = Array.from(this.vueStore.costsMap.values()).pop();
-                const lastDayCoast = Object.values(lastMonth).slice(-2, -1)[0];
+                const lastDayCoast = Object.values(lastMonth).pop();
                 return String(lastDayCoast).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
             },
 
