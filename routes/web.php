@@ -129,7 +129,7 @@ Route::get('/yandex-direct-info', function(Request $request) {
 
             "ReportName" : "test_otchet",
             "ReportType": "CAMPAIGN_PERFORMANCE_REPORT",
-            "DateRangeType" : "' . $request->period . '",
+            "DateRangeType" : 1"' . $request->period . '",
             "Format" : "TSV",
             "IncludeVAT" : "YES",
             "IncludeDiscount" : "NO"
