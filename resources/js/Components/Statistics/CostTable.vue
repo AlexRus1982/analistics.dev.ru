@@ -42,8 +42,9 @@
         </div>
 
         <div class="last_day_coast">Траты за вчерашний день = {{ lastDayValue }}</div>
+        <div class="last_day_coast" style="margin-top: 10px;">Среднее значение трат за 10 дней = {{ last10DaysValue[0] }}</div>
+        <div class="last_day_coast" style="margin-top: 10px;">Отклонение от среднего значения = {{ last10DaysValue[1] }}</div>
 
-        <!-- <line-chart :data="{'Января' : 2, 'Февраля' : 4 }"></line-chart> -->
     </div>
 </template>
 
@@ -129,6 +130,45 @@
                 const lastMonth = Array.from(this.vueStore.costsMap.values()).pop();
                 const lastDayCoast = Object.values(lastMonth).pop();
                 return String(lastDayCoast).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
+            },
+
+            last10DaysValue() {
+                const lastMonth = Array.from(this.vueStore.costsMap.values()).pop();
+                const lastDayCoast = Object.values(lastMonth).pop();
+                
+                const last10DaysValues = Object.values(lastMonth).slice(-10)
+                const last10DaysAvg = last10DaysValues.reduce((a, b) => a + b) / last10DaysValues.length;
+                const last10DaysAvgStr = String(last10DaysAvg.toFixed(0)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
+
+                const deltaCoast = (lastDayCoast - last10DaysAvg) / last10DaysAvg * 100
+                const deltaCoastStr = String(deltaCoast.toFixed(0)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' %'
+
+                return [last10DaysAvgStr, deltaCoastStr]
+            },
+
+            latsMonthValues() {
+                const lastMonth = Array.from(this.vueStore.costsMap.values()).pop();
+                
+                const last10DaysValues = Object.values(lastMonth).slice(-10)
+                const last10DaysAvg = last10DaysValues.reduce((a, b) => a + b) / last10DaysValues.length;
+                
+                const lastMonthAvg = {}
+                console.debug(Object.keys(lastMonth).slice(-10))
+                for(const key of Object.keys(lastMonth).slice(-10)) {
+                    lastMonthAvg[`${key}`] = last10DaysAvg
+                }
+
+                console.debug(lastMonth)
+                return [
+                    { 
+                        name : 'Значения трат',
+                        data : lastMonth,
+                    },
+                    { 
+                        name : 'Среднее значение трат зв 10 дней',
+                        data : lastMonthAvg,
+                    },
+                ]
             },
 
         },

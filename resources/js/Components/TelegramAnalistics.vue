@@ -58,6 +58,11 @@
                         </div>
                         <table-list-all/>
                     </div>
+
+                    <!-- Таблица Статистика Дельта-->
+                    <div v-if="vueStore.loading == false">
+                        <cost-table-delta-telegram/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,13 +96,15 @@
     import {ref} from 'vue'
     import TableListTelegram from './TableAll/TableListTelegram.vue';
     import CostTableTelegram from './Statistics/CostTableTelegram.vue';
+    import CostTableDeltaTelegram from './Statistics/CostTableDeltaTelegram.vue';
 
     export default {
         name: "TelegramAnalistics",
         
         components: {
-            'table-list-all'        : TableListTelegram,
-            'cost-table-telegram'   : CostTableTelegram,
+            'table-list-all'            : TableListTelegram,
+            'cost-table-telegram'       : CostTableTelegram,
+            'cost-table-delta-telegram' : CostTableDeltaTelegram,
         },
 
         setup(){

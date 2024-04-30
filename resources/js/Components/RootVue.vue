@@ -16,7 +16,12 @@
                     <div class="tab_button" :class="activeTab == 1 ? 'active' : false" @click="setActiveTab(1)">CPC</div>
                     <div class="tab_button" :class="activeTab == 2 ? 'active' : false" @click="setActiveTab(2)">CTR</div>
                     <div class="tab_button" :class="activeTab == 3 ? 'active' : false" @click="setActiveTab(3)">Статистика</div>
-                    <div class="tab_button" :class="activeTab == 4 ? 'active' : false" @click="setActiveTab(4)">Конструктор</div>
+                    <div class="tab_button" :class="activeTab == 5 ? 'active' : false" @click="setActiveTab(5)">Аутсайдеры</div>
+                    
+                    <div class="tab_button constructor" :class="activeTab == 4 ? 'active' : false" @click="setActiveTab(4)">
+                        <div>Конструктор</div>
+                        <div v-if="ungroupedCompaignsCount > 0" class="bubble">{{ ungroupedCompaignsCount }}</div>
+                    </div>
                 </div>
             </div>
 
@@ -95,6 +100,11 @@
                         <!-- right -->
                         <div class="tab_panel_right"><campaign-list/></div>
                     </div>
+
+                    <!-- Аутсайдеры -->
+                    <div v-if="vueStore.loading == false && activeTab == 5" class="tab_panel table" :class="activeTab == 5 ? 'active' : false" >
+                        <out-siders/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,6 +123,7 @@
     import GroupsList from './GroupsList.vue';
     import CampaignList from './CampaignList.vue';
     import CostTable from './Statistics/CostTable.vue';
+    import OutSiders from './OutSiders.vue';
 
     export default {
         name: "RootVue",
@@ -124,6 +135,16 @@
             'groups-list'       : GroupsList,
             'campaign-list'     : CampaignList,
             'cost-table'        : CostTable,
+            'out-siders'        : OutSiders,
+        },
+
+        computed : {
+            ungroupedCompaignsCount() {
+                const array = Array
+                        .from(this.vueStore.campaignsMap)
+                        .filter(item => item[1].parentId == -1)
+                return (array.length) ? array.length : 0
+            },
         },
 
         setup(){

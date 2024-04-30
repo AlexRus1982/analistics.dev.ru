@@ -111,7 +111,7 @@ export const VueStore = {
                 const lastMonthDayKey = Object.keys(store.costsMap.get(`${lastMonthKey}`)).pop()
                 delete store.costsMap.get(`${lastMonthKey}`)[`${lastMonthDayKey}`]
 
-                // console.debug(store.costsMap, lastMonthKey, lastMonthDayKey)
+                console.debug(store.costsMap, lastMonthKey, lastMonthDayKey)
                 resolve(true)
             })
             .catch(error => console.log("request failed", error));

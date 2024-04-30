@@ -56,7 +56,7 @@
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                gap: 30px;
+                gap: 20px;
 
                 .table_list_header {
                     width: 150px;
@@ -90,6 +90,8 @@
                     display: flex;
                     flex-direction: row;
                     justify-content: center;
+                    height: 100%;
+                    align-items: center;
     
                     &.active {
                         font-weight: 600;
@@ -98,6 +100,25 @@
                     &:not(.active){
                         &:hover {
                             cursor: pointer;
+                            color: #59F;
+                        }
+                    }
+
+                    &.constructor {
+                        .bubble {
+                            position: absolute;
+                            right: -15px;
+                            top: 0;
+                            height: 20px;
+                            width: 20px;
+                            font-weight: 600;
+                            font-size: 12px;
+                            border-radius: 50%;
+                            background-color: #F95;
+                            color: #FFF;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
                         }
                     }
                 }

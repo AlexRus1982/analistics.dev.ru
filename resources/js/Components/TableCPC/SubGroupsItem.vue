@@ -38,7 +38,7 @@
             <div class="front_cell">{{ campaign.CostStr }}</div>
         </div>
 
-        <div v-if="(campaign.Cost / campaign.Clicks)" class="table_row_item_bubble_wrapper">
+        <div v-if="campaign.Clicks > 0" class="table_row_item_bubble_wrapper">
             <div class="table_row_item_bubble">
                 {{ String((campaign.Cost / campaign.Clicks).toFixed(1)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽' }}
             </div>

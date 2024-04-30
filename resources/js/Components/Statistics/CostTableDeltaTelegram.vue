@@ -1,16 +1,9 @@
 <template>
-
-    <div v-if="vueStore.loading == false" class="table">
-        
-        <div class="charts_table_wrapper">
-            <div class="charts_table">
-                <!-- <div class="chart_title">{{ getMonth(key) }}</div> -->
-                <line-chart :title="getMonth(lastMonth[0])" :data="lastMonth[1]" suffix=" ₽" thousands=" "></line-chart>
-            </div>
-        </div>
-
-        <div class="last_day_coast">Траты за вчерашний день = {{ lastDayValue }}</div>
-
+    <div v-if="vueStore.loading == false && Math.abs(lastDayDelta) > 10" class="table" style="box-shadow:0px 0px 10px red inset; padding: 10px 0px; margin-bottom: 50px;">
+        <line-chart :title="getMonth(lastMonth[0])" :data="latsMonthValues" suffix=" ₽" thousands=" "></line-chart>
+        <div class="last_day_coast" style="margin: 10px 0px 0px 10px;">Траты за вчерашний день = {{ lastDayValue }}</div>
+        <div class="last_day_coast" style="margin: 10px 0px 0px 10px;">Среднее значение трат за 10 дней = {{ last10DaysValue[0] }}</div>
+        <div class="last_day_coast" style="margin: 10px 0px 0px 10px;">Отклонение от среднего значения = {{ last10DaysValue[1] }}</div>
     </div>
 </template>
 
