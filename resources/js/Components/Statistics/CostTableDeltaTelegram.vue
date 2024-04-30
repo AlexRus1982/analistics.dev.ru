@@ -1,5 +1,5 @@
 <template>
-    <div v-if="vueStore.loading == false && Math.abs(lastDayDelta) > 20" class="table" style="box-shadow:0px 0px 10px red inset; padding: 10px 0px; margin-bottom: 50px;">
+    <div v-if="vueStore.loading == false && Math.abs(lastDayDelta) > 10" class="table" style="box-shadow:0px 0px 10px red inset; padding: 10px 0px; margin-bottom: 50px;">
         <line-chart :title="getMonth(lastMonth[0])" :data="latsMonthValues" suffix=" ₽" thousands=" "></line-chart>
         <div class="last_day_coast" style="margin: 10px 0px 0px 10px;">Траты за вчерашний день = {{ lastDayValue }}</div>
         <div class="last_day_coast" style="margin: 10px 0px 0px 10px;">Среднее значение трат за 10 дней = {{ last10DaysValue[0] }}</div>
