@@ -14,6 +14,7 @@ export const VueStore = {
     campaignsMap        : new Map(),
     groupsMap           : new Map(),
     costsMap            : new Map(),
+    coastsAll           : new Map(),
 
     // period = 'YESTERDAY', 'LAST_WEEK', 'THIS_MONTH'
     setup               : async function(period = 'YESTERDAY') {
@@ -105,11 +106,32 @@ export const VueStore = {
                     costsByMonth.set(`${month}`, monthCoastsObj)
                 }
 
-                store.costsMap = new Map([...costsByMonth])
+                const costsAll = new Map()
+                for(const [key, value] of costs) {
+                    const keyData = new Date(`${key}`).toLocaleString('ru', {
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    costsAll.set(`${keyData}`, parseInt(value))
 
-                const lastMonthKey = Array.from(store.costsMap.keys()).pop()
-                const lastMonthDayKey = Object.keys(store.costsMap.get(`${lastMonthKey}`)).pop()
-                delete store.costsMap.get(`${lastMonthKey}`)[`${lastMonthDayKey}`]
+                }
+                const lastKey = Array.from(costsAll.keys()).pop()
+                costsAll.delete(`${lastKey}`)
+
+                store.coastsAll = new Map([...costsAll])
+                console.debug(store.coastsAll)
+
+
+                const lastMonthKey = Array.from(costsByMonth.keys()).pop()
+                const lastMonthDayKey = Object.keys(costsByMonth.get(`${lastMonthKey}`)).pop()
+                delete costsByMonth.get(`${lastMonthKey}`)[`${lastMonthDayKey}`]
+
+                if (Array.from(costsByMonth.get(`${lastMonthKey}`)).length == 0) {
+                    console.debug('empty')
+                    costsByMonth.delete(`${lastMonthKey}`)
+                }
+
+                store.costsMap = new Map([...costsByMonth])
 
                 console.debug(store.costsMap, lastMonthKey, lastMonthDayKey)
                 resolve(true)

@@ -127,16 +127,14 @@
             },
 
             lastDayValue() {
-                const lastMonth = Array.from(this.vueStore.costsMap.values()).pop();
-                const lastDayCoast = Object.values(lastMonth).pop();
+                const lastDayCoast = Array.from(this.vueStore.coastsAll.values()).pop();
                 return String(lastDayCoast).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
             },
 
             last10DaysValue() {
-                const lastMonth = Array.from(this.vueStore.costsMap.values()).pop();
-                const lastDayCoast = Object.values(lastMonth).pop();
+                const lastDayCoast = Array.from(this.vueStore.coastsAll.values()).pop();
                 
-                const last10DaysValues = Object.values(lastMonth).slice(-10)
+                const last10DaysValues = Array.from(this.vueStore.coastsAll.values()).slice(-10)
                 const last10DaysAvg = last10DaysValues.reduce((a, b) => a + b) / last10DaysValues.length;
                 const last10DaysAvgStr = String(last10DaysAvg.toFixed(0)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' ₽'
 
@@ -149,7 +147,7 @@
             latsMonthValues() {
                 const lastMonth = Array.from(this.vueStore.costsMap.values()).pop();
                 
-                const last10DaysValues = Object.values(lastMonth).slice(-10)
+                const last10DaysValues = Array.from(this.vueStore.coastsAll.values()).slice(-10)
                 const last10DaysAvg = last10DaysValues.reduce((a, b) => a + b) / last10DaysValues.length;
                 
                 const lastMonthAvg = {}
