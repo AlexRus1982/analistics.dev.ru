@@ -127,8 +127,8 @@
                 const last10DaysAvg = last10DaysValues.reduce((a, b) => a + b) / last10DaysValues.length;
                 
                 const lastMonthAvg = {}
-                console.debug(Object.keys(lastMonth))
-                for(const key of Object.keys(lastMonth)) {
+                console.debug(Object.keys(lastMonth).slice(-10))
+                for(const key of Object.keys(lastMonth).slice(-10)) {
                     lastMonthAvg[`${key}`] = last10DaysAvg
                 }
 
