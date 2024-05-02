@@ -111,13 +111,14 @@
             },
 
             lastDayDelta() {
-                const lastMonth = Array.from(this.vueStore.costsMap.values()).pop();
-                const lastDayCoast = Object.values(lastMonth).pop();
+                const lastDayCoast = Array.from(this.vueStore.coastsAll.values()).pop();
                 
-                const last10DaysValues = Object.values(lastMonth).slice(-10)
+                const last10DaysValues = Array.from(this.vueStore.coastsAll.values()).slice(-10)
                 const last10DaysAvg = last10DaysValues.reduce((a, b) => a + b) / last10DaysValues.length;
                 
-                return (lastDayCoast - last10DaysAvg) / last10DaysAvg * 100
+                const delta = (lastDayCoast - last10DaysAvg) / last10DaysAvg * 100
+                console.debug(delta)
+                return delta
             },
 
             latsMonthValues() {

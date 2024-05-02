@@ -25,6 +25,16 @@ export const VueStore = {
         store.allImpressionsValue   = 0
         store.allClicksValue        = 0
 
+        const yandexDirectCampaignsPromise = new Promise((resolve, reject) => {
+            fetch(`/yandex-direct-caimpaigns`)
+            .then(response => response.text())
+            .then(text => {
+                console.debug(text)
+                resolve(true)
+            })
+            .catch(error => console.log("request failed", error));
+        })
+
         const yandexDirectInfoPromise = new Promise((resolve, reject) => {
             fetch(`/yandex-direct-info?period=${period}`)
             .then(response => response.text())
@@ -126,9 +136,11 @@ export const VueStore = {
                 const lastMonthDayKey = Object.keys(costsByMonth.get(`${lastMonthKey}`)).pop()
                 delete costsByMonth.get(`${lastMonthKey}`)[`${lastMonthDayKey}`]
 
-                if (Array.from(costsByMonth.get(`${lastMonthKey}`)).length == 0) {
+                console.debug(costsByMonth, lastMonthKey, Object.keys(costsByMonth.get(`${lastMonthKey}`)).length)
+
+                if (Object.keys(costsByMonth.get(`${lastMonthKey}`)).length == 0) {
                     console.debug('empty')
-                    costsByMonth.delete(`${lastMonthKey}`)
+                    // costsByMonth.delete(`${lastMonthKey}`)
                 }
 
                 store.costsMap = new Map([...costsByMonth])
@@ -270,6 +282,7 @@ export const VueStore = {
         // }
 
         Promise.all([
+            yandexDirectCampaignsPromise,
             yandexDirectInfoPromise,
             yandexDirectCostPromise,
             groupListPromise,
