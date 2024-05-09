@@ -163,7 +163,7 @@ Route::get('/yandex-direct-cost', function() {
     $dateToday = date('Y-m-d', time());
     $dateStart = explode('-', $dateToday)[0] . '-01' . '-01';
 
-    $ReportsURL = 'https://api.direct.yandex.com/json/v5/reports';
+    $ReportsURL = 'https://api.direct.yandex.com/json/v5/reports2';
 
     // OAuth-токен пользователя, от имени которого будут выполняться запросы
     $token = 'y0_AgAAAABT-UwxAAZAOQAAAAEA2YPLAAAMYYqB_uFJspxfKYad38plb8j-_Q';
