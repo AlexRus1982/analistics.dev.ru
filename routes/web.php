@@ -19,7 +19,7 @@ Route::get('/', function() {
     return view('main-app');
 })->name('index');
 
-Route::get('/telegram-analistics', function() {
+Route::get('/telegram-analistics/{number}', function() {
     return view('main-app');
 })->name('analistics.telegram.page');
 
@@ -221,8 +221,8 @@ Route::get('/yandex-direct-cost', function() {
     return($server_output);
 });
 
-Route::get('/yandex-direct-caimpaigns', function() {
-    $ReportsURL = 'https://api.direct.yandex.com/json/v5/ads';
+Route::get('/yandex-direct-images', function() {
+    $ReportsURL = 'https://api.direct.yandex.com/json/v5/adimages';
 
     // OAuth-токен пользователя, от имени которого будут выполняться запросы
     $token = 'y0_AgAAAABT-UwxAAZAOQAAAAEA2YPLAAAMYYqB_uFJspxfKYad38plb8j-_Q';
@@ -238,11 +238,16 @@ Route::get('/yandex-direct-caimpaigns', function() {
         "method": "get",
         "params": {
             "SelectionCriteria": {
-                "CampaignIds": ["101913945"],
-            }, 
-            "FieldNames": [( "AdCategories" | "AgeLabel" | "AdGroupId" | "CampaignId" | "Id" | "State" | "Status" | "StatusClarification" | "Type" | "Subtype" ), ... ],
+                "Associated": "YES"
+            },
+            "FieldNames": [
+                "AdImageHash", 
+                "OriginalUrl", 
+                "PreviewUrl", 
+                "Name"
+            ],
             "Page": {
-                "Limit": 100,
+                "Limit": 10000,
                 "Offset": 0
             }
         }
@@ -268,10 +273,257 @@ Route::get('/yandex-direct-caimpaigns', function() {
     // logger($http_code);
     curl_close($ch);
    
-    logger($server_output);
+    // logger($server_output);
     // dump($server_output);
     return($server_output);
 });
+
+Route::get('/yandex-direct-campaigns', function() {
+    $ReportsURL = 'https://api.direct.yandex.com/json/v5/campaigns';
+
+    // OAuth-токен пользователя, от имени которого будут выполняться запросы
+    $token = 'y0_AgAAAABT-UwxAAZAOQAAAAEA2YPLAAAMYYqB_uFJspxfKYad38plb8j-_Q';
+
+    // Логин клиента рекламного агентства
+    // Обязательный параметр, если запросы выполняются от имени рекламного агентства
+    $clientLogin = 'artfabric-int';
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $ReportsURL);
+    curl_setopt($ch, CURLOPT_POST, 1);
+
+    curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+        "method": "get",
+        "params": {
+            "SelectionCriteria": {
+                "States": [
+                    "ARCHIVED", 
+                    "CONVERTED", 
+                    "ENDED", 
+                    "OFF", 
+                    "ON", 
+                    "SUSPENDED"
+                ]
+            },
+            "FieldNames": [
+                "Id", 
+                "Name", 
+                "StatusClarification", 
+                "Type"
+            ]
+        }
+    }');  //Post Fields
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $headers = [
+        'POST /json/v5/ads/ HTTP/1.1',
+        'Host: api.direct.yandex.com',
+        'Authorization: Bearer ' . $token,
+        'Accept-Language: ru',
+        'Client-Login: ' . $clientLogin,
+        'ProcessingMode: auto',
+        // 'Content-Type: application/json; charset=utf-8',
+    ];
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $server_output = curl_exec($ch);
+    $http_code = curl_getinfo($ch/*, CURLINFO_HTTP_CODE*/);
+    // dump($http_code);
+    // logger($http_code);
+    curl_close($ch);
+   
+    // logger($server_output);
+    // dump($server_output);
+    return($server_output);
+});
+
+Route::get('/yandex-direct-groups', function() {
+    $ReportsURL = 'https://api.direct.yandex.com/json/v5/adgroups';
+
+    // OAuth-токен пользователя, от имени которого будут выполняться запросы
+    $token = 'y0_AgAAAABT-UwxAAZAOQAAAAEA2YPLAAAMYYqB_uFJspxfKYad38plb8j-_Q';
+
+    // Логин клиента рекламного агентства
+    // Обязательный параметр, если запросы выполняются от имени рекламного агентства
+    $clientLogin = 'artfabric-int';
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $ReportsURL);
+    curl_setopt($ch, CURLOPT_POST, 1);
+
+    curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+        "method": "get",
+        "params": {
+            "SelectionCriteria": {
+                "CampaignIds": [108028751]
+            },
+            "FieldNames": [
+                "CampaignId", 
+                "Id", 
+                "Name", 
+                "NegativeKeywords", 
+                "NegativeKeywordSharedSetIds", 
+                "RegionIds", 
+                "RestrictedRegionIds", 
+                "ServingStatus", 
+                "Status", 
+                "Subtype", 
+                "TrackingParams", 
+                "Type"
+            ]
+        }
+    }');  //Post Fields
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $headers = [
+        'POST /json/v5/ads/ HTTP/1.1',
+        'Host: api.direct.yandex.com',
+        'Authorization: Bearer ' . $token,
+        'Accept-Language: ru',
+        'Client-Login: ' . $clientLogin,
+        'ProcessingMode: auto',
+        // 'Content-Type: application/json; charset=utf-8',
+    ];
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $server_output = curl_exec($ch);
+    $http_code = curl_getinfo($ch/*, CURLINFO_HTTP_CODE*/);
+    // dump($http_code);
+    // logger($http_code);
+    curl_close($ch);
+   
+    // logger($server_output);
+    // dump($server_output);
+    return($server_output);
+});
+
+// Route::get('/yandex-direct-caimpaigns', function() {
+//     // $ReportsURL = 'https://api.direct.yandex.com/json/v5/adimages';
+//     // $ReportsURL = 'https://api.direct.yandex.com/json/v5/ads';
+//     $ReportsURL = 'https://api.direct.yandex.com/json/v5/adgroups';
+//     // $ReportsURL = 'https://api.direct.yandex.com/json/v5/campaigns';
+
+
+
+//     // OAuth-токен пользователя, от имени которого будут выполняться запросы
+//     $token = 'y0_AgAAAABT-UwxAAZAOQAAAAEA2YPLAAAMYYqB_uFJspxfKYad38plb8j-_Q';
+
+//     // Логин клиента рекламного агентства
+//     // Обязательный параметр, если запросы выполняются от имени рекламного агентства
+//     $clientLogin = 'artfabric-int';
+
+//     $ch = curl_init();
+//     curl_setopt($ch, CURLOPT_URL, $ReportsURL);
+//     curl_setopt($ch, CURLOPT_POST, 1);
+//     // curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+//     //     "method": "get",
+//     //     "params": {
+//     //         "SelectionCriteria": {
+//     //             "Associated": "YES"
+//     //         },
+//     //         "FieldNames": [
+//     //             "AdImageHash", 
+//     //             "OriginalUrl", 
+//     //             "PreviewUrl", 
+//     //             "Name"
+//     //         ],
+//     //         "Page": {
+//     //             "Limit": 100,
+//     //             "Offset": 0
+//     //         }
+//     //     }
+//     // }');  //Post Fields
+
+
+//     // curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+//     //     "method": "get",
+//     //     "params": {
+//     //         "SelectionCriteria": {
+//     //             "CampaignIds": [109344130]
+//     //         },
+//     //         "FieldNames": [
+//     //             "AdCategories", 
+//     //             "AgeLabel", 
+//     //             "AdGroupId", 
+//     //             "CampaignId", 
+//     //             "Id", 
+//     //             "State", 
+//     //             "Status", 
+//     //             "StatusClarification", 
+//     //             "Type", 
+//     //             "Subtype"
+//     //         ]
+//     //     }
+//     // }');  //Post Fields
+
+//     // curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+//     //     "method": "get",
+//     //     "params": {
+//     //         "SelectionCriteria": {
+//     //             "CampaignIds": [109344130]
+//     //         },
+//     //         "FieldNames": [
+//     //             "CampaignId", 
+//     //             "Id", 
+//     //             "Name", 
+//     //             "NegativeKeywords", 
+//     //             "NegativeKeywordSharedSetIds", 
+//     //             "RegionIds", 
+//     //             "RestrictedRegionIds", 
+//     //             "ServingStatus", 
+//     //             "Status", 
+//     //             "Subtype", 
+//     //             "TrackingParams", 
+//     //             "Type"
+//     //         ]
+//     //     }
+//     // }');  //Post Fields
+
+//     // curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+//     //     "method": "get",
+//     //     "params": {
+//     //         "SelectionCriteria": {
+//     //             "States": [
+//     //                 "ON"
+//     //             ]
+//     //         },
+//     //         "FieldNames": [
+//     //             "Id", 
+//     //             "Name", 
+//     //             "StatusClarification", 
+//     //             "Type"
+//     //         ]
+//     //     }
+//     // }');  //Post Fields
+
+//     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+//     $headers = [
+//         'POST /json/v5/ads/ HTTP/1.1',
+//         'Host: api.direct.yandex.com',
+//         'Authorization: Bearer ' . $token,
+//         'Accept-Language: ru',
+//         'Client-Login: ' . $clientLogin,
+//         'ProcessingMode: auto',
+//         // 'Content-Type: application/json; charset=utf-8',
+//     ];
+
+//     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+//     $server_output = curl_exec($ch);
+//     $http_code = curl_getinfo($ch/*, CURLINFO_HTTP_CODE*/);
+//     // dump($http_code);
+//     // logger($http_code);
+//     curl_close($ch);
+   
+//     logger($server_output);
+//     // dump($server_output);
+//     return($server_output);
+// });
 
 Route::get('/groups-list', function() {
     $groups = DB::table('Groups')

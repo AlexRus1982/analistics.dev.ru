@@ -25,11 +25,39 @@ export const VueStore = {
         store.allImpressionsValue   = 0
         store.allClicksValue        = 0
 
-        const yandexDirectCampaignsPromise = new Promise((resolve, reject) => {
-            fetch(`/yandex-direct-caimpaigns`)
+        const yandexDirectImagesPromise = new Promise((resolve, reject) => {
+            fetch(`/yandex-direct-images`)
             .then(response => response.text())
             .then(text => {
-                console.debug(text)
+                // console.debug(text)
+                // console.table(JSON.parse(text).result.AdImages)
+                console.debug(JSON.parse(text).result.AdImages)
+                resolve(true)
+            })
+            .catch(error => console.log("request failed", error));
+        })
+
+        const yandexDirectCampaignsPromise = new Promise((resolve, reject) => {
+            fetch(`/yandex-direct-campaigns`)
+            .then(response => response.text())
+            .then(text => {
+                // console.debug(text)
+                // console.table(JSON.parse(text).result.Campaigns)
+                // console.debug(JSON.parse(text).result.Campaigns.filter(campaign=>campaign.StatusClarification == 'Идут показы'))
+                console.debug(JSON.parse(text).result.Campaigns.filter(campaign=>campaign.StatusClarification != 'Кампания перенесена в архив'))
+                // console.debug(JSON.parse(text).result.Campaigns)
+                resolve(true)
+            })
+            .catch(error => console.log("request failed", error));
+        })
+
+        const yandexDirectGroupsPromise = new Promise((resolve, reject) => {
+            fetch(`/yandex-direct-groups`)
+            .then(response => response.text())
+            .then(text => {
+                // console.debug(text)
+                // console.table(JSON.parse(text).result.Campaigns)
+                console.debug(JSON.parse(text))
                 resolve(true)
             })
             .catch(error => console.log("request failed", error));
@@ -282,7 +310,9 @@ export const VueStore = {
         // }
 
         Promise.all([
+            yandexDirectImagesPromise,
             yandexDirectCampaignsPromise,
+            yandexDirectGroupsPromise,
             yandexDirectInfoPromise,
             yandexDirectCostPromise,
             groupListPromise,

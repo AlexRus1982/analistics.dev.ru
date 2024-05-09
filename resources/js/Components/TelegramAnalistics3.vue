@@ -3,12 +3,10 @@
         <div class="tabs_area">
             <div class="tabs_area_body_wrapper">
                 <div class="tabs_area_body">
-                    <!-- Таблица Статистика-->
+                    <!-- Таблица Статистика Дельта-->
                     <div v-if="vueStore.loading == false">
-                        <cost-table-telegram/>
+                        <cost-table-delta-telegram/>
                     </div>
-
-                    <div v-if="vueStore.loading == false" class="block_title">Данные за вчерашний день - {{ yesterday }}</div>
                 </div>
             </div>
         </div>
@@ -45,7 +43,7 @@
     import CostTableDeltaTelegram from './Statistics/CostTableDeltaTelegram.vue';
 
     export default {
-        name: "TelegramAnalistics",
+        name: "TelegramAnalistics3",
         
         components: {
             'table-list-all'            : TableListTelegram,

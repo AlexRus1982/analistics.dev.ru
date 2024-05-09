@@ -23,8 +23,18 @@ const routes = [
     },
 
     {
-        path            : "/telegram-analistics/",
+        path            : "/telegram-analistics/1/",
         component       : () => import('./Components/TelegramAnalistics.vue'),
+    },
+
+    {
+        path            : "/telegram-analistics/2/",
+        component       : () => import('./Components/TelegramAnalistics2.vue'),
+    },
+
+    {
+        path            : "/telegram-analistics/3/",
+        component       : () => import('./Components/TelegramAnalistics3.vue'),
     },
 ];
   
