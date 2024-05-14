@@ -16,42 +16,62 @@ export const VueStore = {
     costsMap            : new Map(),
     coastsAll           : new Map(),
 
+    adImagesMap         : new Map(),
+    adCampaignsMap      : new Map(),
+    campaignsImages     : new Map(),
+
     // period = 'YESTERDAY', 'LAST_WEEK', 'THIS_MONTH'
     setup               : async function(period = 'YESTERDAY') {
 
         const store                 = this
+        store.period                = period
         store.loading               = true
         store.allCostValue          = 0.0
         store.allImpressionsValue   = 0
         store.allClicksValue        = 0
 
-        const yandexDirectImagesPromise = new Promise((resolve, reject) => {
+        const yandexDirectImagesPromise = () => new Promise((resolve, reject) => {
             fetch(`/yandex-direct-images`)
             .then(response => response.text())
             .then(text => {
                 // console.debug(text)
-                // console.table(JSON.parse(text).result.AdImages)
-                console.debug(JSON.parse(text).result.AdImages)
+                
+                const adImagesArray = JSON.parse(text).result.AdImages
+                // console.table(adImagesArray)
+                // console.debug(adImagesArray)
+                adImagesArray.forEach(adImage => {
+                    this.adImagesMap.set(`${adImage.AdImageHash}`, adImage)
+                });
+                console.debug(this.adImagesMap)
+
                 resolve(true)
             })
             .catch(error => console.log("request failed", error));
         })
 
-        const yandexDirectCampaignsPromise = new Promise((resolve, reject) => {
+        const yandexDirectCampaignsPromise = () => new Promise((resolve, reject) => {
             fetch(`/yandex-direct-campaigns`)
             .then(response => response.text())
             .then(text => {
                 // console.debug(text)
                 // console.table(JSON.parse(text).result.Campaigns)
                 // console.debug(JSON.parse(text).result.Campaigns.filter(campaign=>campaign.StatusClarification == 'Идут показы'))
-                console.debug(JSON.parse(text).result.Campaigns.filter(campaign=>campaign.StatusClarification != 'Кампания перенесена в архив'))
+                const campaignsArray = JSON.parse(text)?.result?.Campaigns?.filter(campaign=>campaign.StatusClarification != 'Кампания перенесена в архив')
+
+                const adCampaignsMap = new Map()
+                campaignsArray.forEach(campaignItem => {
+                    adCampaignsMap.set(`${campaignItem.Id}`, campaignItem)
+                });
+
+                this.adCampaignsMap = adCampaignsMap
+                console.debug(this.adCampaignsMap)
                 // console.debug(JSON.parse(text).result.Campaigns)
                 resolve(true)
             })
             .catch(error => console.log("request failed", error));
         })
 
-        const yandexDirectGroupsPromise = new Promise((resolve, reject) => {
+        const yandexDirectGroupsPromise = () => new Promise((resolve, reject) => {
             fetch(`/yandex-direct-groups`)
             .then(response => response.text())
             .then(text => {
@@ -63,7 +83,31 @@ export const VueStore = {
             .catch(error => console.log("request failed", error));
         })
 
-        const yandexDirectInfoPromise = new Promise((resolve, reject) => {
+        const yandexDirectCampaignsGroupsPromise = () => new Promise((resolve, reject) => {
+            fetch(`/yandex-direct-campaigns-groups`)
+            .then(response => response.text())
+            .then(text => {
+                // console.debug(text)
+                console.table(JSON.parse(text).result.AdGroups)
+                // console.debug(JSON.parse(text))
+                resolve(true)
+            })
+            .catch(error => console.log("request failed", error));
+        })
+
+        const yandexDirectCampaignsAdsPromise = () => new Promise((resolve, reject) => {
+            fetch(`/yandex-direct-campaigns-ads`)
+            .then(response => response.text())
+            .then(text => {
+                // console.debug(text)
+                console.table(JSON.parse(text).result.Ads.filter(item=>item.State=="ON"))
+                // console.debug(JSON.parse(text))
+                resolve(true)
+            })
+            .catch(error => console.log("request failed", error));
+        })
+
+        const yandexDirectInfoPromise = () => new Promise((resolve, reject) => {
             fetch(`/yandex-direct-info?period=${period}`)
             .then(response => response.text())
             .then(text => {
@@ -96,7 +140,7 @@ export const VueStore = {
             .catch(error => console.log("request failed", error));
         })
 
-        const yandexDirectCostPromise = new Promise((resolve, reject) => {
+        const yandexDirectCostPromise = () => new Promise((resolve, reject) => {
             fetch(`/yandex-direct-cost`)
             .then(response => response.text())
             .then(text => {
@@ -179,7 +223,7 @@ export const VueStore = {
             .catch(error => console.log("request failed", error));
         })
 
-        const groupListPromise = new Promise((resolve, reject) => {
+        const groupListPromise = () => new Promise((resolve, reject) => {
             fetch('/groups-list')
             .then(response => response.json())
             .then(({server_answer, groups_list}) => {
@@ -310,12 +354,14 @@ export const VueStore = {
         // }
 
         Promise.all([
-            yandexDirectImagesPromise,
-            yandexDirectCampaignsPromise,
-            yandexDirectGroupsPromise,
-            yandexDirectInfoPromise,
-            yandexDirectCostPromise,
-            groupListPromise,
+            yandexDirectImagesPromise(),
+            yandexDirectCampaignsPromise(),
+            // yandexDirectGroupsPromise(),
+            // yandexDirectCampaignsGroupsPromise(),
+            // yandexDirectCampaignsAdsPromise(),
+            yandexDirectInfoPromise(),
+            yandexDirectCostPromise(),
+            groupListPromise(),
         ]).then(results => {
             console.debug('make links')
 
@@ -336,5 +382,39 @@ export const VueStore = {
             })
             .catch(error => console.log("request failed", error))
         });
+    },
+
+    loadAdImages        : function(page=1) {
+        const store     = this
+
+        const yandexDirectCampaignsAdsPromise = () => new Promise((resolve, reject) => {
+            fetch(`/yandex-direct-campaigns-ads?page=${page}`)
+            .then(response => response.text())
+            .then(text => {
+                const adsArray = JSON.parse(text).result.Ads.filter(item=>(item.State=="ON"))
+                // console.table(adsArray)
+                
+                const campaignsImages = new Map()
+                adsArray.forEach(adsItem => {
+                    if (!campaignsImages.get(`${adsItem.CampaignId}`)){
+                        campaignsImages.set(`${adsItem.CampaignId}`, [])
+                    }
+
+                    if(this.adImagesMap.get(`${adsItem.TextAd?.AdImageHash}`))
+                        campaignsImages.get(`${adsItem.CampaignId}`).push(this.adImagesMap.get(`${adsItem.TextAd.AdImageHash}`))
+                });
+
+                this.campaignsImages = campaignsImages
+                console.table(campaignsImages)
+                store.loading = false
+                resolve(true)
+            })
+            .catch(error => console.log("request failed", error));
+        })
+        
+        if (!this.adImagesMap.size){
+            store.loading = true
+            yandexDirectCampaignsAdsPromise()
+        }
     },
 }

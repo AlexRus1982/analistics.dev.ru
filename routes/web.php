@@ -15,9 +15,13 @@ use Illuminate\Support\Facades\DB;
 |
 */
 
-Route::get('/', function() {
-    return view('main-app');
-})->name('index');
+Route::get('/',             fn() => view('main-app'))->name('index');
+Route::get('/cpc',          fn() => view('main-app'))->name('cpc');
+Route::get('/ctr',          fn() => view('main-app'))->name('ctr');
+Route::get('/statistics',   fn() => view('main-app'))->name('statistics');
+Route::get('/outsiders',    fn() => view('main-app'))->name('outsiders');
+Route::get('/constructor',  fn() => view('main-app'))->name('constructor');
+Route::get('/adimages',     fn() => view('main-app'))->name('adImages');
 
 Route::get('/telegram-analistics/{number}', function() {
     return view('main-app');
@@ -401,6 +405,199 @@ Route::get('/yandex-direct-groups', function() {
     return($server_output);
 });
 
+Route::get('/yandex-direct-campaigns-groups', function() {
+    // OAuth-токен пользователя, от имени которого будут выполняться запросы
+    $token = 'y0_AgAAAABT-UwxAAZAOQAAAAEA2YPLAAAMYYqB_uFJspxfKYad38plb8j-_Q';
+
+    // Логин клиента рекламного агентства
+    // Обязательный параметр, если запросы выполняются от имени рекламного агентства
+    $clientLogin = 'artfabric-int';
+
+    $campaignsURL = 'https://api.direct.yandex.com/json/v5/campaigns';
+    $groupsURL = 'https://api.direct.yandex.com/json/v5/adgroups';
+
+    $ch = curl_init();
+    $headers = [
+        'POST /json/v5/ads/ HTTP/1.1',
+        'Host: api.direct.yandex.com',
+        'Authorization: Bearer ' . $token,
+        'Accept-Language: ru',
+        'Client-Login: ' . $clientLogin,
+        'ProcessingMode: auto',
+        // 'Content-Type: application/json; charset=utf-8',
+    ];
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+    curl_setopt($ch, CURLOPT_URL, $campaignsURL);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+        "method": "get",
+        "params": {
+            "SelectionCriteria": {
+                "States": [
+                    "CONVERTED", 
+                    "ENDED", 
+                    "OFF", 
+                    "ON", 
+                    "SUSPENDED"
+                ]
+            },
+            "FieldNames": [
+                "Id"
+            ]
+        }
+    }');  //Post Fields
+
+
+    $server_output = curl_exec($ch);
+    $http_code = curl_getinfo($ch/*, CURLINFO_HTTP_CODE*/);
+
+    // logger($http_code);
+    $json = json_decode($server_output);
+    $idsArray = $json?->result?->Campaigns; //$json?->result?->Campaigns;
+    $ids = [];
+
+    foreach($idsArray as $key => $value) {
+        array_push($ids, $value->Id);
+    }
+
+    $ids = array_slice($ids, 50, 10);
+    $idsStr = implode(', ', $ids);
+    logger($idsStr);
+
+    curl_setopt($ch, CURLOPT_URL, $groupsURL);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+        "method": "get",
+        "params": {
+            "SelectionCriteria": {
+                "CampaignIds": [' . $idsStr . ']
+            },
+            "FieldNames": [
+                "CampaignId", 
+                "Id", 
+                "Name", 
+                "Type"
+            ]
+        }
+    }');  //Post Fields
+
+    $server_output = curl_exec($ch);
+    // logger($server_output);
+    $http_code = curl_getinfo($ch/*, CURLINFO_HTTP_CODE*/);
+
+
+    curl_close($ch);
+    return($server_output);
+});
+
+Route::get('/yandex-direct-campaigns-ads', function(Request $request) {
+    // OAuth-токен пользователя, от имени которого будут выполняться запросы
+    $token = 'y0_AgAAAABT-UwxAAZAOQAAAAEA2YPLAAAMYYqB_uFJspxfKYad38plb8j-_Q';
+
+    // Логин клиента рекламного агентства
+    // Обязательный параметр, если запросы выполняются от имени рекламного агентства
+    $clientLogin = 'artfabric-int';
+
+    $campaignsURL = 'https://api.direct.yandex.com/json/v5/campaigns';
+    $adsURL = 'https://api.direct.yandex.com/json/v5/ads';
+
+    $ch = curl_init();
+    $headers = [
+        'POST /json/v5/ads/ HTTP/1.1',
+        'Host: api.direct.yandex.com',
+        'Authorization: Bearer ' . $token,
+        'Accept-Language: ru',
+        'Client-Login: ' . $clientLogin,
+        'ProcessingMode: auto',
+        // 'Content-Type: application/json; charset=utf-8',
+    ];
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+    curl_setopt($ch, CURLOPT_URL, $campaignsURL);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+        "method": "get",
+        "params": {
+            "SelectionCriteria": {
+                "States": [
+                    "CONVERTED", 
+                    "ENDED", 
+                    "OFF", 
+                    "ON", 
+                    "SUSPENDED"
+                ]
+            },
+            "FieldNames": [
+                "Id"
+            ]
+        }
+    }');  //Post Fields
+
+
+    $server_output = curl_exec($ch);
+    $http_code = curl_getinfo($ch/*, CURLINFO_HTTP_CODE*/);
+
+    // logger($http_code);
+    $json = json_decode($server_output);
+    $idsArray = $json?->result?->Campaigns; //$json?->result?->Campaigns;
+    $ids = [];
+
+    foreach($idsArray as $key => $value) {
+        array_push($ids, $value->Id);
+    }
+
+    $ids = 
+        isset($request->page) ? 
+        array_slice($ids, ($request->page - 1) * 10, 10) : 
+        array_slice($ids, 0, 10);
+
+    $idsStr = implode(', ', $ids);
+    // logger($idsStr);
+
+    curl_setopt($ch, CURLOPT_URL, $adsURL);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+        "method": "get",
+        "params": {
+            "SelectionCriteria": {
+                "CampaignIds": [' . $idsStr . ']
+            },
+            "FieldNames": [
+                "AdGroupId", 
+                "CampaignId", 
+                "Id", 
+                "State", 
+                "StatusClarification", 
+                "Type", 
+                "Subtype"
+            ],
+            "TextAdFieldNames" : [
+                "AdImageHash",
+                "DisplayDomain",
+                "Href",
+                "SitelinkSetId",
+                "Text",
+                "Title",
+                "Title2",
+                "Mobile",
+                "DisplayUrlPath",
+                "AdImageModeration",
+                "SitelinksModeration",
+                "VideoExtension"
+            ]
+        }
+    }');  //Post Fields
+
+    $server_output = curl_exec($ch);
+    // logger($server_output);
+    $http_code = curl_getinfo($ch/*, CURLINFO_HTTP_CODE*/);
+
+
+    curl_close($ch);
+    return($server_output);
+});
+
 // Route::get('/yandex-direct-caimpaigns', function() {
 //     // $ReportsURL = 'https://api.direct.yandex.com/json/v5/adimages';
 //     // $ReportsURL = 'https://api.direct.yandex.com/json/v5/ads';
@@ -646,7 +843,6 @@ Route::post('/group-set-order', function(Request $request) {
         ]);
     }
 });
-
 
 Route::post('/campaign-add-to-group', function(Request $request) {
     try {

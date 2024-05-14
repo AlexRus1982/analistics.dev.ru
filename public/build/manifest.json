@@ -1,25 +1,25 @@
 {
-  "_CostTableDeltaTelegram-!~{008}~.js": {
+  "_CostTableDeltaTelegram-!~{00f}~.js": {
     "file": "assets/CostTableDeltaTelegram-BWPBga6q.css",
-    "src": "_CostTableDeltaTelegram-!~{008}~.js"
+    "src": "_CostTableDeltaTelegram-!~{00f}~.js"
   },
-  "_CostTableDeltaTelegram-BJKoMEK4.js": {
-    "file": "assets/CostTableDeltaTelegram-BJKoMEK4.js",
+  "_CostTableDeltaTelegram-iQdYocO2.js": {
+    "file": "assets/CostTableDeltaTelegram-iQdYocO2.js",
     "name": "CostTableDeltaTelegram",
     "imports": [
-      "_SubGroupsTable-Cru6f0d6.js",
+      "_SubGroupsTable-Bl6wSop_.js",
       "resources/js/app.js"
     ],
     "css": [
       "assets/CostTableDeltaTelegram-BWPBga6q.css"
     ]
   },
-  "_SubGroupsTable-!~{007}~.js": {
+  "_SubGroupsTable-!~{00d}~.js": {
     "file": "assets/SubGroupsTable-ByJ08L-g.css",
-    "src": "_SubGroupsTable-!~{007}~.js"
+    "src": "_SubGroupsTable-!~{00d}~.js"
   },
-  "_SubGroupsTable-Cru6f0d6.js": {
-    "file": "assets/SubGroupsTable-Cru6f0d6.js",
+  "_SubGroupsTable-Bl6wSop_.js": {
+    "file": "assets/SubGroupsTable-Bl6wSop_.js",
     "name": "SubGroupsTable",
     "imports": [
       "resources/js/app.js"
@@ -28,74 +28,173 @@
       "assets/SubGroupsTable-ByJ08L-g.css"
     ]
   },
+  "_preloader-!~{00e}~.js": {
+    "file": "assets/preloader-DhxhbZJa.css",
+    "src": "_preloader-!~{00e}~.js"
+  },
+  "_preloader-BTqg0Yju.js": {
+    "file": "assets/preloader-BTqg0Yju.js",
+    "name": "preloader",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/preloader-DhxhbZJa.css"
+    ]
+  },
   "resources/css/app.css": {
     "file": "assets/app-l0sNRNKZ.js",
     "name": "app",
     "src": "resources/css/app.css",
     "isEntry": true
   },
-  "resources/js/Components/RootVue.vue": {
-    "file": "assets/RootVue-Cdk29-Rt.js",
-    "name": "RootVue",
-    "src": "resources/js/Components/RootVue.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "_SubGroupsTable-Cru6f0d6.js",
-      "resources/js/app.js"
-    ],
-    "css": [
-      "assets/RootVue-CgUrPxaH.css"
-    ]
-  },
   "resources/js/Components/TelegramAnalistics.vue": {
-    "file": "assets/TelegramAnalistics-BGzJsGga.js",
+    "file": "assets/TelegramAnalistics-BnhM1bDx.js",
     "name": "TelegramAnalistics",
     "src": "resources/js/Components/TelegramAnalistics.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_CostTableDeltaTelegram-BJKoMEK4.js",
+      "_CostTableDeltaTelegram-iQdYocO2.js",
       "resources/js/app.js",
-      "_SubGroupsTable-Cru6f0d6.js"
+      "_SubGroupsTable-Bl6wSop_.js"
     ],
     "css": [
       "assets/TelegramAnalistics-DSmNmf14.css"
     ]
   },
   "resources/js/Components/TelegramAnalistics2.vue": {
-    "file": "assets/TelegramAnalistics2-r8wjW6tS.js",
+    "file": "assets/TelegramAnalistics2-6A1A6na5.js",
     "name": "TelegramAnalistics2",
     "src": "resources/js/Components/TelegramAnalistics2.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_CostTableDeltaTelegram-BJKoMEK4.js",
+      "_CostTableDeltaTelegram-iQdYocO2.js",
       "resources/js/app.js",
-      "_SubGroupsTable-Cru6f0d6.js"
+      "_SubGroupsTable-Bl6wSop_.js"
     ],
     "css": [
       "assets/TelegramAnalistics-DSmNmf14.css"
     ]
   },
   "resources/js/Components/TelegramAnalistics3.vue": {
-    "file": "assets/TelegramAnalistics3-BvkXUj4F.js",
+    "file": "assets/TelegramAnalistics3-_eo5Lmna.js",
     "name": "TelegramAnalistics3",
     "src": "resources/js/Components/TelegramAnalistics3.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_CostTableDeltaTelegram-BJKoMEK4.js",
+      "_CostTableDeltaTelegram-iQdYocO2.js",
       "resources/js/app.js",
-      "_SubGroupsTable-Cru6f0d6.js"
+      "_SubGroupsTable-Bl6wSop_.js"
     ],
     "css": [
       "assets/TelegramAnalistics-DSmNmf14.css"
     ]
   },
+  "resources/js/Components/Views/adImagesView.vue": {
+    "file": "assets/adImagesView-DMd6752R.js",
+    "name": "adImagesView",
+    "src": "resources/js/Components/Views/adImagesView.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_preloader-BTqg0Yju.js"
+    ],
+    "css": [
+      "assets/adImagesView-Bi8mEN47.css"
+    ]
+  },
+  "resources/js/Components/Views/constructorView.vue": {
+    "file": "assets/constructorView-i3W-7KbL.js",
+    "name": "constructorView",
+    "src": "resources/js/Components/Views/constructorView.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_preloader-BTqg0Yju.js"
+    ],
+    "css": [
+      "assets/constructorView-CVQmTg4s.css"
+    ]
+  },
+  "resources/js/Components/Views/cpcView.vue": {
+    "file": "assets/cpcView-BcC77dYI.js",
+    "name": "cpcView",
+    "src": "resources/js/Components/Views/cpcView.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_preloader-BTqg0Yju.js"
+    ],
+    "css": [
+      "assets/cpcView-F7zlVyhb.css"
+    ]
+  },
+  "resources/js/Components/Views/ctrView.vue": {
+    "file": "assets/ctrView-CYWUkpjm.js",
+    "name": "ctrView",
+    "src": "resources/js/Components/Views/ctrView.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_preloader-BTqg0Yju.js"
+    ],
+    "css": [
+      "assets/ctrView-CBZemn1P.css"
+    ]
+  },
+  "resources/js/Components/Views/indexView.vue": {
+    "file": "assets/indexView-CkFx5tDd.js",
+    "name": "indexView",
+    "src": "resources/js/Components/Views/indexView.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_SubGroupsTable-Bl6wSop_.js",
+      "resources/js/app.js",
+      "_preloader-BTqg0Yju.js"
+    ],
+    "css": [
+      "assets/indexView-B5hQrp6g.css"
+    ]
+  },
+  "resources/js/Components/Views/outsidersView.vue": {
+    "file": "assets/outsidersView-lcJEpIg7.js",
+    "name": "outsidersView",
+    "src": "resources/js/Components/Views/outsidersView.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_preloader-BTqg0Yju.js"
+    ],
+    "css": [
+      "assets/outsidersView-DxRFtEVJ.css"
+    ]
+  },
+  "resources/js/Components/Views/statisticsView.vue": {
+    "file": "assets/statisticsView-CeTmE7Ir.js",
+    "name": "statisticsView",
+    "src": "resources/js/Components/Views/statisticsView.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_preloader-BTqg0Yju.js"
+    ],
+    "css": [
+      "assets/statisticsView-DhjN-Pz9.css"
+    ]
+  },
   "resources/js/app.js": {
-    "file": "assets/app-CHiuaF9t.js",
+    "file": "assets/app-Cc46qtVJ.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "dynamicImports": [
-      "resources/js/Components/RootVue.vue",
+      "resources/js/Components/Views/indexView.vue",
+      "resources/js/Components/Views/cpcView.vue",
+      "resources/js/Components/Views/ctrView.vue",
+      "resources/js/Components/Views/statisticsView.vue",
+      "resources/js/Components/Views/outsidersView.vue",
+      "resources/js/Components/Views/constructorView.vue",
+      "resources/js/Components/Views/adImagesView.vue",
       "resources/js/Components/TelegramAnalistics.vue",
       "resources/js/Components/TelegramAnalistics2.vue",
       "resources/js/Components/TelegramAnalistics3.vue"

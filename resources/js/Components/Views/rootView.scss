@@ -1,0 +1,223 @@
+.work_area {
+    width: 100%;
+    display: flex;
+
+    .tabs_area {
+        // box-shadow: 4px 4px 4px #EEE;
+        width : 100%;
+        height : 100%;
+        border : 1px solid #EEE;
+        display: flex;
+        flex-direction: column;
+
+        .pre_loader {
+            position: absolute;
+            width: 100%;
+            height: calc(100vh - 51px);
+            top: 51px;
+            left: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 10000;
+
+            svg {
+                animation-name: apps-loader-rotation;
+                animation-duration: 2s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+            }
+        }
+    
+        @keyframes apps-loader-rotation {
+            0% {
+                transform:rotate(0deg);
+            }
+            100% {
+                transform:rotate(360deg);
+            }
+        }
+
+        .tabs_area_header_wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background: #E8E8E8;
+            border-bottom: 1px solid #C4c4c4;
+            position: sticky;
+            top: 0px;
+            z-index: 10000;
+
+            .tabs_area_header {
+                width: 100%;
+                max-width: 800px;
+                height: 50px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 20px;
+
+                .table_list_header {
+                    width: 150px;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+
+                    select {
+                        font-size: 1.0rem;
+                        width: 150px;
+                        padding: 4px;
+                    }
+                }
+    
+                .tab_button {
+                    -webkit-touch-callout: none; /* iOS Safari */
+                    -webkit-user-select: none; /* Safari */
+                     -khtml-user-select: none; /* Konqueror HTML */
+                       -moz-user-select: none; /* Old versions of Firefox */
+                        -ms-user-select: none; /* Internet Explorer/Edge */
+                            user-select: none; /* Non-prefixed version, currently
+                                                  supported by Chrome, Edge, Opera and Firefox */
+
+                    &:first-child {
+                        margin-left: 2px;
+                    }
+                    transition: 0.3s;
+                    position: relative;
+                    width: fit-content;
+                    font-weight: 100;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    height: 100%;
+                    align-items: center;
+    
+                    &.active {
+                        font-weight: 600;
+                    }
+    
+                    &:not(.active){
+                        &:hover {
+                            cursor: pointer;
+                            color: #59F;
+                        }
+                    }
+
+                    &.constructor {
+                        .bubble {
+                            position: absolute;
+                            right: -15px;
+                            top: 0;
+                            height: 20px;
+                            width: 20px;
+                            font-weight: 600;
+                            font-size: 12px;
+                            border-radius: 50%;
+                            background-color: #F95;
+                            color: #FFF;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                    }
+                }
+            }
+        }
+
+        .table_header_wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 10000;
+            position: sticky;
+            margin-top: 75px;
+            top: 51px;
+
+            .table_header {
+                display: flex;
+                flex-direction: row;
+                width: 800px;
+    
+                .table_header_item {
+                    width: 134px;
+                    height: 39px;
+                    border: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: end;
+                    background-color: #F1F2F2;
+                    padding-left: 10px;
+                    padding-right: 10px;
+    
+                    &:first-child {
+                        width: 281px;
+                        justify-content: left;
+                    }
+                }
+    
+                .table_header_item {
+                    justify-content: center;
+    
+                    &:first-child {
+                        justify-content: center;
+                    }
+                }
+            }
+        }
+
+        .tabs_area_body_wrapper {
+            width: 100%;
+            min-height: calc(100vh - 55px);
+            display: flex;
+            justify-content: center;
+            background: #F1F2F2;
+
+            .tabs_area_body {
+                width: 100%;
+                max-width: 800px;
+                overflow-y: hidden;
+    
+                .tab_panel {
+                    display: none;
+                    width: 100%;
+                    height: 100%;
+                    // overflow-x: hidden;
+    
+                    .tab_panel_left, .tab_panel_right {
+                        display: flex;
+                        padding: 10px 10px;
+                        gap:10px;
+                    }
+    
+                    .tab_panel_right {
+                        flex-direction: column;
+                        width: 30%;
+                        overflow-y: auto;
+                    }
+    
+                    .tab_panel_left {
+                        display: flex;
+                        flex-direction: column;
+                        width: 70%;
+                        border-right: 2px solid #0002;
+                        overflow: hidden;
+                    }
+    
+                    &.active {
+                        display: flex;
+                    }
+    
+                    &.table {
+                        flex-direction: column;
+                    }
+                }
+    
+                :not(.active) .constructor {
+                    display: flex;
+                    flex-direction: row;
+                }
+            }
+        }
+    }
+}

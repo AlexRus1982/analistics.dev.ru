@@ -19,19 +19,50 @@ import {
 const routes = [
     {
         path            : "/",
-        component       : () => import('./Components/RootVue.vue'),
+        name            : "index",
+        component       : () => import('./Components/Views/indexView.vue'),
     },
-
+    {
+        path            : "/cpc",
+        name            : "cpc",
+        component       : () => import('./Components/Views/cpcView.vue'),
+    },
+    {
+        path            : "/ctr",
+        name            : "ctr",
+        component       : () => import('./Components/Views/ctrView.vue'),
+    },
+    {
+        path            : "/statistics",
+        name            : "statistics",
+        component       : () => import('./Components/Views/statisticsView.vue'),
+    },
+    {
+        path            : "/outsiders",
+        name            : "outsiders",
+        component       : () => import('./Components/Views/outsidersView.vue'),
+    },
+    {
+        path            : "/constructor",
+        name            : "constructor",
+        component       : () => import('./Components/Views/constructorView.vue'),
+    },
+    {
+        path            : "/adimages",
+        name            : "adimages",
+        component       : () => import('./Components/Views/adImagesView.vue'),
+    },
+    // ---------------------------------------------------------------------------
+    // service pages
+    // ---------------------------------------------------------------------------
     {
         path            : "/telegram-analistics/1/",
         component       : () => import('./Components/TelegramAnalistics.vue'),
     },
-
     {
         path            : "/telegram-analistics/2/",
         component       : () => import('./Components/TelegramAnalistics2.vue'),
     },
-
     {
         path            : "/telegram-analistics/3/",
         component       : () => import('./Components/TelegramAnalistics3.vue'),
