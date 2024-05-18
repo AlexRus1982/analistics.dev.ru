@@ -598,6 +598,74 @@ Route::get('/yandex-direct-campaigns-ads', function(Request $request) {
     return($server_output);
 });
 
+Route::get('/yandex-direct-campaign-ads', function(Request $request) {
+    $token = 'y0_AgAAAABT-UwxAAZAOQAAAAEA2YPLAAAMYYqB_uFJspxfKYad38plb8j-_Q';
+    $clientLogin = 'artfabric-int';
+    $adsURL = 'https://api.direct.yandex.com/json/v5/ads';
+
+    $ch = curl_init();
+    $headers = [
+        'POST /json/v5/ads/ HTTP/1.1',
+        'Host: api.direct.yandex.com',
+        'Authorization: Bearer ' . $token,
+        'Accept-Language: ru',
+        'Client-Login: ' . $clientLogin,
+        'ProcessingMode: auto',
+        // 'Content-Type: application/json; charset=utf-8',
+    ];
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $server_output = curl_exec($ch);
+    $http_code = curl_getinfo($ch/*, CURLINFO_HTTP_CODE*/);
+
+    $ids = [];
+    array_push($ids, $request->Id);
+
+    $idsStr = implode(', ', $ids);
+    // logger($idsStr);
+
+    curl_setopt($ch, CURLOPT_URL, $adsURL);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,'{
+        "method": "get",
+        "params": {
+            "SelectionCriteria": {
+                "CampaignIds": [' . $idsStr . ']
+            },
+            "FieldNames": [
+                "AdGroupId", 
+                "CampaignId", 
+                "Id", 
+                "State", 
+                "StatusClarification", 
+                "Type", 
+                "Subtype"
+            ],
+            "TextAdFieldNames" : [
+                "AdImageHash",
+                "DisplayDomain",
+                "Href",
+                "SitelinkSetId",
+                "Text",
+                "Title",
+                "Title2",
+                "Mobile",
+                "DisplayUrlPath",
+                "AdImageModeration",
+                "SitelinksModeration",
+                "VideoExtension"
+            ]
+        }
+    }');  //Post Fields
+
+    $server_output = curl_exec($ch);
+    $http_code = curl_getinfo($ch/*, CURLINFO_HTTP_CODE*/);
+
+    curl_close($ch);
+    return($server_output);
+});
+
 // Route::get('/yandex-direct-caimpaigns', function() {
 //     // $ReportsURL = 'https://api.direct.yandex.com/json/v5/adimages';
 //     // $ReportsURL = 'https://api.direct.yandex.com/json/v5/ads';

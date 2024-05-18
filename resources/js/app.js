@@ -50,7 +50,7 @@ const routes = [
     {
         path            : "/adimages",
         name            : "adimages",
-        component       : () => import('./Components/Views/adImagesView.vue'),
+        component       : () => import('./Components/Views/adImagesView2.vue'),
     },
     // ---------------------------------------------------------------------------
     // service pages

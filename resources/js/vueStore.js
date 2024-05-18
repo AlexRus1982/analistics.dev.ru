@@ -66,6 +66,7 @@ export const VueStore = {
                 this.adCampaignsMap = adCampaignsMap
                 console.debug(this.adCampaignsMap)
                 // console.debug(JSON.parse(text).result.Campaigns)
+
                 resolve(true)
             })
             .catch(error => console.log("request failed", error));
@@ -381,6 +382,26 @@ export const VueStore = {
                 console.debug(store.groupsMap)
             })
             .catch(error => console.log("request failed", error))
+
+            const yandexDirectCampaignAdsPromise = (Id) => new Promise((resolve, reject) => {
+                fetch(`/yandex-direct-campaign-ads?Id=${Id}`)
+                .then(response => response.text())
+                .then(text => {
+                    const adsArray = JSON.parse(text).result.Ads.filter(item=>item.State=="ON" && item.TextAd?.AdImageHash)
+                    // console.debug(adsArray)
+                    if (adsArray) {
+                        const ads = this.adCampaignsMap.get(`${Id}`)
+                        ads['picturesNumber'] = adsArray.length
+                    }
+                    resolve(true)
+                })
+                .catch(error => console.log("request failed", error));
+            })
+
+            for(const item of Array.from(this.adCampaignsMap.values())) {
+                item.picturesNumber = 0
+                yandexDirectCampaignAdsPromise(item.Id)
+            }
         });
     },
 
