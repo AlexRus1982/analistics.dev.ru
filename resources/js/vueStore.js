@@ -17,6 +17,8 @@ export const VueStore = {
     coastsAll           : new Map(),
 
     adImagesMap         : new Map(),
+    adInfoMap           : new Map(),
+    adSummInfoMap       : new Map(),
     adCampaignsMap      : new Map(),
     campaignsImages     : new Map(),
 
@@ -42,7 +44,7 @@ export const VueStore = {
                 adImagesArray.forEach(adImage => {
                     this.adImagesMap.set(`${adImage.AdImageHash}`, adImage)
                 });
-                console.debug(this.adImagesMap)
+                // console.debug(this.adImagesMap)
 
                 resolve(true)
             })
@@ -64,7 +66,7 @@ export const VueStore = {
                 });
 
                 this.adCampaignsMap = adCampaignsMap
-                console.debug(this.adCampaignsMap)
+                // console.debug(this.adCampaignsMap)
                 // console.debug(JSON.parse(text).result.Campaigns)
 
                 resolve(true)
@@ -78,7 +80,7 @@ export const VueStore = {
             .then(text => {
                 // console.debug(text)
                 // console.table(JSON.parse(text).result.Campaigns)
-                console.debug(JSON.parse(text))
+                // console.debug(JSON.parse(text))
                 resolve(true)
             })
             .catch(error => console.log("request failed", error));
@@ -116,7 +118,7 @@ export const VueStore = {
                 const lines = text.split('\n').slice(1, -2);
                 const header = lines.shift().split('\t');
                 // delete(lines[0]);
-                console.debug(header);
+                // console.debug(header);
 
                 store.campaignsMap.clear()
                 lines.forEach(line => {
@@ -135,7 +137,88 @@ export const VueStore = {
                     store.campaignsMap.set(`${id}`, lineObject);
                 })
             
-                console.debug(store.campaignsMap);
+                // console.debug(store.campaignsMap);
+                resolve(true)
+            })
+            .catch(error => console.log("request failed", error));
+        })
+
+        const yandexDirectAdsInfo10Promise = () => new Promise((resolve, reject) => {
+            fetch(`/yandex-direct-ads-info-10`)
+            .then(response => response.text())
+            .then(text => {
+                // console.debug(text)
+                const lines = text.split('\n').slice(1, -2);
+                const header = lines.shift().split('\t');
+                delete(lines[0]);
+                // console.debug(header);
+
+                lines.forEach(line => {
+                    const lineArray = line.split('\t');
+            
+                    const lineObject = {};
+                    lineObject[`${header[0]}`] = lineArray[0].trim()
+                    lineObject[`${header[1]}`] = lineArray[1].trim()
+                    lineObject[`${header[2]}`] = parseInt(lineArray[2])
+                    lineObject[`${header[3]}`] = parseInt(lineArray[3])
+                    lineObject[`${header[4]}`] = parseFloat(lineArray[4]) / 1000000
+            
+                    const id = lineArray[1].trim();
+                    const adObject = store.adSummInfoMap.get(`${id}`)
+                    if (adObject){
+                        adObject.Clicks += lineObject.Clicks
+                        adObject.Impressions += lineObject.Impressions
+                    }
+                    else {
+                        store.adSummInfoMap.set(`${id}`, lineObject)
+                    }
+                })
+
+                store.adSummInfoMap.forEach((value, key) => {
+                    const impressions = (value.Impressions) ? value.Impressions : 0;
+                    const clicks = (value.Clicks) ? value.Clicks : 0;
+                    value['Ctr'] = ''
+                    
+                    if (impressions != 0) {
+                        const ctr = 100 * clicks / impressions
+                        value['Ctr'] = String(ctr.toFixed(3)).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ") + ' %'
+                    }
+                })
+            
+                // console.debug(lines.length, store.adSummInfoMap);
+
+                resolve(true)
+            })
+            .catch(error => console.log("request failed", error));
+        })
+
+        const yandexDirectAdsInfoPromise = () => new Promise((resolve, reject) => {
+            fetch(`/yandex-direct-ads-info`)
+            .then(response => response.text())
+            .then(text => {
+                // console.debug(text)
+                const lines = text.split('\n').slice(1, -2);
+                const header = lines.shift().split('\t');
+                delete(lines[0]);
+                // console.debug(header);
+
+                store.adSummInfoMap.clear()
+                lines.forEach(line => {
+                    const lineArray = line.split('\t');
+            
+                    const lineObject = {};
+                    lineObject[`${header[0]}`] = lineArray[0].trim()
+                    lineObject[`${header[1]}`] = 0
+                    lineObject[`${header[2]}`] = 0
+                    lineObject[`${header[3]}`] = parseFloat(lineArray[3]) / 1000000
+            
+                    const id = lineArray[0].trim();
+                    store.adSummInfoMap.set(`${id}`, lineObject)
+                })
+            
+                // console.debug(lines.length, store.adSummInfoMap);
+                yandexDirectAdsInfo10Promise()
+
                 resolve(true)
             })
             .catch(error => console.log("request failed", error));
@@ -147,7 +230,7 @@ export const VueStore = {
             .then(text => {
                 const lines = text.split('\n').slice(1, -2);
                 const header = lines.shift().split('\t');
-                console.debug(header);
+                // console.debug(header);
 
                 const costs = new Map()
                 lines.forEach(line => {
@@ -169,7 +252,7 @@ export const VueStore = {
                     costsMonth.push(key.split('-')[1])
                 }
                 const costsMonthUniq = new Set(costsMonth)
-                console.debug(costsMonthUniq)
+                // console.debug(costsMonthUniq)
 
                 const costsByMonth = new Map()
 
@@ -202,23 +285,23 @@ export const VueStore = {
                 costsAll.delete(`${lastKey}`)
 
                 store.coastsAll = new Map([...costsAll])
-                console.debug(store.coastsAll)
+                // console.debug(store.coastsAll)
 
 
                 const lastMonthKey = Array.from(costsByMonth.keys()).pop()
                 const lastMonthDayKey = Object.keys(costsByMonth.get(`${lastMonthKey}`)).pop()
                 delete costsByMonth.get(`${lastMonthKey}`)[`${lastMonthDayKey}`]
 
-                console.debug(costsByMonth, lastMonthKey, Object.keys(costsByMonth.get(`${lastMonthKey}`)).length)
+                // console.debug(costsByMonth, lastMonthKey, Object.keys(costsByMonth.get(`${lastMonthKey}`)).length)
 
                 if (Object.keys(costsByMonth.get(`${lastMonthKey}`)).length == 0) {
-                    console.debug('empty')
+                    // console.debug('empty')
                     // costsByMonth.delete(`${lastMonthKey}`)
                 }
 
                 store.costsMap = new Map([...costsByMonth])
 
-                console.debug(store.costsMap, lastMonthKey, lastMonthDayKey)
+                // console.debug(store.costsMap, lastMonthKey, lastMonthDayKey)
                 resolve(true)
             })
             .catch(error => console.log("request failed", error));
@@ -228,7 +311,7 @@ export const VueStore = {
             fetch('/groups-list')
             .then(response => response.json())
             .then(({server_answer, groups_list}) => {
-                console.debug(server_answer, groups_list);
+                // console.debug(server_answer, groups_list);
                 
                 store.groupsMap.clear()
                 for (const group of groups_list) {
@@ -269,7 +352,7 @@ export const VueStore = {
                 if (campaign) {
                     campaign.parentId = link.groupId
                 } else {
-                    console.debug(link)
+                    // console.debug(link)
                 }
             }
         }
@@ -361,10 +444,11 @@ export const VueStore = {
             // yandexDirectCampaignsGroupsPromise(),
             // yandexDirectCampaignsAdsPromise(),
             yandexDirectInfoPromise(),
+            yandexDirectAdsInfoPromise(),
             yandexDirectCostPromise(),
             groupListPromise(),
         ]).then(results => {
-            console.debug('make links')
+            // console.debug('make links')
 
             fetch('/campaign-group-links')
             .then(response => response.json())
@@ -379,7 +463,7 @@ export const VueStore = {
                 formatValuesOfGroups()
                 formatValuesOfCampaigns()
                 store.loading = false
-                console.debug(store.groupsMap)
+                // console.debug(store.groupsMap)
             })
             .catch(error => console.log("request failed", error))
 

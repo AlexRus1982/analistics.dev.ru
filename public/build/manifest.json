@@ -3,11 +3,11 @@
     "file": "assets/CostTableDeltaTelegram-BWPBga6q.css",
     "src": "_CostTableDeltaTelegram-!~{00f}~.js"
   },
-  "_CostTableDeltaTelegram-CoGDpHq3.js": {
-    "file": "assets/CostTableDeltaTelegram-CoGDpHq3.js",
+  "_CostTableDeltaTelegram-Df60D0sl.js": {
+    "file": "assets/CostTableDeltaTelegram-Df60D0sl.js",
     "name": "CostTableDeltaTelegram",
     "imports": [
-      "_SubGroupsTable-EByrvijN.js",
+      "_SubGroupsTable-Bql4LImy.js",
       "resources/js/app.js"
     ],
     "css": [
@@ -18,8 +18,8 @@
     "file": "assets/SubGroupsTable-ByJ08L-g.css",
     "src": "_SubGroupsTable-!~{00d}~.js"
   },
-  "_SubGroupsTable-EByrvijN.js": {
-    "file": "assets/SubGroupsTable-EByrvijN.js",
+  "_SubGroupsTable-Bql4LImy.js": {
+    "file": "assets/SubGroupsTable-Bql4LImy.js",
     "name": "SubGroupsTable",
     "imports": [
       "resources/js/app.js"
@@ -32,8 +32,8 @@
     "file": "assets/preloader-CdoL2P-n.css",
     "src": "_preloader-!~{00e}~.js"
   },
-  "_preloader-ui37DM52.js": {
-    "file": "assets/preloader-ui37DM52.js",
+  "_preloader-DNzGpWgY.js": {
+    "file": "assets/preloader-DNzGpWgY.js",
     "name": "preloader",
     "imports": [
       "resources/js/app.js"
@@ -49,141 +49,141 @@
     "isEntry": true
   },
   "resources/js/Components/TelegramAnalistics.vue": {
-    "file": "assets/TelegramAnalistics-DfHDY39d.js",
+    "file": "assets/TelegramAnalistics-DsEbdTX_.js",
     "name": "TelegramAnalistics",
     "src": "resources/js/Components/TelegramAnalistics.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_CostTableDeltaTelegram-CoGDpHq3.js",
+      "_CostTableDeltaTelegram-Df60D0sl.js",
       "resources/js/app.js",
-      "_SubGroupsTable-EByrvijN.js"
+      "_SubGroupsTable-Bql4LImy.js"
     ],
     "css": [
       "assets/TelegramAnalistics-DSmNmf14.css"
     ]
   },
   "resources/js/Components/TelegramAnalistics2.vue": {
-    "file": "assets/TelegramAnalistics2-BgfkXi5z.js",
+    "file": "assets/TelegramAnalistics2-DFOCHBoI.js",
     "name": "TelegramAnalistics2",
     "src": "resources/js/Components/TelegramAnalistics2.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_CostTableDeltaTelegram-CoGDpHq3.js",
+      "_CostTableDeltaTelegram-Df60D0sl.js",
       "resources/js/app.js",
-      "_SubGroupsTable-EByrvijN.js"
+      "_SubGroupsTable-Bql4LImy.js"
     ],
     "css": [
       "assets/TelegramAnalistics-DSmNmf14.css"
     ]
   },
   "resources/js/Components/TelegramAnalistics3.vue": {
-    "file": "assets/TelegramAnalistics3-B2WVIUqh.js",
+    "file": "assets/TelegramAnalistics3-BlQ3-L9A.js",
     "name": "TelegramAnalistics3",
     "src": "resources/js/Components/TelegramAnalistics3.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_CostTableDeltaTelegram-CoGDpHq3.js",
+      "_CostTableDeltaTelegram-Df60D0sl.js",
       "resources/js/app.js",
-      "_SubGroupsTable-EByrvijN.js"
+      "_SubGroupsTable-Bql4LImy.js"
     ],
     "css": [
       "assets/TelegramAnalistics-DSmNmf14.css"
     ]
   },
   "resources/js/Components/Views/adImagesView2.vue": {
-    "file": "assets/adImagesView2-DBSeM6kS.js",
+    "file": "assets/adImagesView2-CYHRWXx7.js",
     "name": "adImagesView2",
     "src": "resources/js/Components/Views/adImagesView2.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_preloader-ui37DM52.js",
+      "_preloader-DNzGpWgY.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/adImagesView2-CZcaScXa.css"
+      "assets/adImagesView2-D7TeP2oB.css"
     ]
   },
   "resources/js/Components/Views/constructorView.vue": {
-    "file": "assets/constructorView-DvOZPxIk.js",
+    "file": "assets/constructorView-DDc1mtdz.js",
     "name": "constructorView",
     "src": "resources/js/Components/Views/constructorView.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_preloader-ui37DM52.js"
+      "_preloader-DNzGpWgY.js"
     ],
     "css": [
       "assets/constructorView-BEmDUafA.css"
     ]
   },
   "resources/js/Components/Views/cpcView.vue": {
-    "file": "assets/cpcView-C6ndMvsi.js",
+    "file": "assets/cpcView-BX4hLwx_.js",
     "name": "cpcView",
     "src": "resources/js/Components/Views/cpcView.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_preloader-ui37DM52.js"
+      "_preloader-DNzGpWgY.js"
     ],
     "css": [
       "assets/cpcView-9nn9djv2.css"
     ]
   },
   "resources/js/Components/Views/ctrView.vue": {
-    "file": "assets/ctrView-B8NyULwI.js",
+    "file": "assets/ctrView-B999DjHz.js",
     "name": "ctrView",
     "src": "resources/js/Components/Views/ctrView.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_preloader-ui37DM52.js"
+      "_preloader-DNzGpWgY.js"
     ],
     "css": [
       "assets/ctrView-hsqn2_s2.css"
     ]
   },
   "resources/js/Components/Views/indexView.vue": {
-    "file": "assets/indexView-CUglUhQi.js",
+    "file": "assets/indexView-kWxW-LxA.js",
     "name": "indexView",
     "src": "resources/js/Components/Views/indexView.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_SubGroupsTable-EByrvijN.js",
+      "_SubGroupsTable-Bql4LImy.js",
       "resources/js/app.js",
-      "_preloader-ui37DM52.js"
+      "_preloader-DNzGpWgY.js"
     ],
     "css": [
       "assets/indexView-D_YW9qhr.css"
     ]
   },
   "resources/js/Components/Views/outsidersView.vue": {
-    "file": "assets/outsidersView-CaQNI7bM.js",
+    "file": "assets/outsidersView-CZaB5Ill.js",
     "name": "outsidersView",
     "src": "resources/js/Components/Views/outsidersView.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_preloader-ui37DM52.js"
+      "_preloader-DNzGpWgY.js"
     ],
     "css": [
       "assets/outsidersView-BzW2C1IR.css"
     ]
   },
   "resources/js/Components/Views/statisticsView.vue": {
-    "file": "assets/statisticsView-BOx-vhfp.js",
+    "file": "assets/statisticsView-AK-vfEwC.js",
     "name": "statisticsView",
     "src": "resources/js/Components/Views/statisticsView.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_preloader-ui37DM52.js"
+      "_preloader-DNzGpWgY.js"
     ],
     "css": [
       "assets/statisticsView-Den8EIp7.css"
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DNW8_hyV.js",
+    "file": "assets/app-BPVgU-cY.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

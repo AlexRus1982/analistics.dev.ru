@@ -60,17 +60,65 @@
                             </svg>
                             <div>Загрузка ...</div>
                         </div>
+                        
+                        <div v-if="loadingImages == false" class="campaign_info">
+                            <label for="grouped" style="margin-right: auto;">Группировать</label>
+                            <input 
+                                type="checkbox"
+                                name="grouped"
+                                id="grouped"
+                                style="cursor: pointer;"
+                                :checked="activeImagesGroupedInput"
+                                @input="onImagesGroupedInputChanged($event)"/>
+                        </div>
 
                         <div v-if="loadingImages == false" class="campaign_info">
                             {{ activeCampaign?.Name }}<span v-if="activeCampaign" @click="onCampaignLinkCLicked(activeCampaign.Id)">(Перейти)</span>
                         </div>
-                        <div v-if="loadingImages == false" class="ad_image_wrapper">
-                            <img v-for="adImage in activeImages" :src= "adImage.PreviewUrl" :alt="adImage.Name" :title="adImage.Name">
+                        <div v-if="loadingImages == false && activeImagesGroupedInput == false" class="ad_image_wrapper">
+                            <img class="ad_list_image_item"
+                                v-for="[adItem, adImage] in activeImages" 
+                                :src= "adImage.PreviewUrl"
+                                :alt="adImage.Name"
+                                :title="adImage.Name"
+                                @click="onNotGroupedImageClicked($event, adItem, adImage)"
+                            >
+                        </div>
+                        <div v-if="loadingImages == false && activeImagesGroupedInput == true" class="ad_image_wrapper">
+                            <img class="ad_list_image_item"
+                                v-for="adImage in activeImagesGrouped"
+                                :src= "adImage.PreviewUrl"
+                                :alt="adImage.Name"
+                                :title="adImage.Name"
+                                @click="onImageClicked($event, adImage.AdImageHash)"
+                            >
                         </div>
                     </div>
 
                     <!-- панель с инфо о картинке -->
-                    <div class="campaigns_ad_image_info_wrapper"></div>
+                    <div class="campaigns_ad_image_info_wrapper">
+                        <div v-if="selectedImage" class="selected_image">
+                            <img :src="selectedImage.OriginalUrl">
+                            <div class="period_label">Данные за прошлые 10 дней</div>
+                            <div class="info_header">
+                                <div class="id">id</div>
+                                <div class="impressions">Показов</div>
+                                <div class="clicks">Кликов</div>
+                                <div class="ctr">CTR</div>
+                            </div>
+                            <div v-for="ads of selectedImageAds" class="info_row">
+                                <div class="id">{{ ads.Id }}</div>
+                                <div class="impressions">{{ (ads.Impressions) ? ads.Impressions : '0' }}</div>
+                                <div class="clicks">{{ (ads.Clicks) ? ads.Clicks : '0' }}</div>
+                                <div class="ctr">{{ (ads.Ctr) ? ads.Ctr : '0.000 %' }}</div>
+                            </div>
+                        </div>
+
+                        <div v-if="selectedImage && activeImagesGroupedInput == false" class="selected_image_check">
+                            Пометить
+                        </div>
+
+                    </div>
 
                 </div>
             </div>
@@ -111,7 +159,7 @@
         max-width: 1200px !important;
         display: grid;
         // flex-direction: row;
-        grid-template-columns: minmax(200px, 400px) 450px 200px;
+        grid-template-columns: minmax(200px, 400px) 450px 300px;
 
         .campaigns_list_wrapper {
             margin-right: 10px;
@@ -174,8 +222,9 @@
                         }
 
                         &.active {
-                            box-shadow: inset 2px 0px 4px #0007;
+                            box-shadow: inset 2px 0px 4px #09F7;
                             font-weight: 600;
+                            background: #09F2;
                         }
 
                         .campaigns_list_item_label {
@@ -226,18 +275,76 @@
                     border: 1px solid #0002;
                     transition: 0.3s;
 
-                    &:hover {
+                    &:hover:not(.active) {
                         cursor: pointer;
-                        box-shadow: 0px 0px 8px #F00;
+                        // box-shadow: 0px 0px 8px #F00;
+                        transform: scale(1.1);
+                        box-shadow: 0px 0px 16px #F00;
+                        border: 1px solid #0000;
+                    }
+
+                    &.active {
+                        box-shadow: 0px 0px 8px #09F;
+                        border: 1px solid #09F;
                     }
                 }
             }
         }
 
-        // .campaigns_ad_image_info_wrapper {
-        //     width: 200px;
-        // }
+        .campaigns_ad_image_info_wrapper {
+            width: calc(100% - 10px);
+            padding-left: 10px;
+            padding-top: 10px;
+            overflow-x: hidden;
 
+            .selected_image {
+                .period_label {
+                    margin: 10px 0px;
+                }
+
+                .id {
+                    width: 200px;
+                }
+
+                .impressions {
+                    width: 100px;
+                }
+                
+                .clicks {
+                    width: 100px;
+                }
+
+                .ctr {
+                    width: 100px;
+                }
+
+                .info_header, .info_row {
+                    display: flex;
+                    flex-direction: row;
+                    font-size: 0.75rem;
+                }
+
+                .info_header {
+                    background: yellow;
+                }
+
+
+                img {
+                    width: 100%;
+                    object-fit: contain;
+                }
+
+            }
+
+            .selected_image_check {
+                margin: 10px 0px;
+                padding: 10px 30px;
+                background: #777;
+                color: #FFF;
+                width: fit-content;
+                border-radius: 5px;
+            }
+        }
     }
 
     .tab_panel.table.active {
@@ -318,8 +425,15 @@
             const filterValue = ref('')
             const activeItemId = ref(-1)
             const activeImages = ref([])
+            const activeImagesGrouped = ref([])
+            const activeImagesGroupedInput = ref(false)
             const activeCampaign = ref(null)
+            const selectedImage = ref(null)
+            const selectedImageNotGrouped = ref(null)
+            const selectedImageGrouped = ref(null)
+            const selectedImageAds = ref(null)
             const loadingImages = ref(false)
+            const adsArray = null
             let filterTimeOut = null
             const vueStore = window._vueStore
             
@@ -333,6 +447,7 @@
             // this.adCampaignsMap
 
             return {
+                adsArray,
                 activeTab,
                 filterValue,
                 filterTimeOut,
@@ -340,6 +455,12 @@
                 activeItemId,
                 loadingImages,
                 activeImages,
+                activeImagesGrouped,
+                activeImagesGroupedInput,
+                selectedImage,
+                selectedImageNotGrouped,
+                selectedImageGrouped,
+                selectedImageAds,
                 vueStore,
                 // currentPage,
                 // route,
@@ -405,6 +526,9 @@
 
             onItemClick(itemId) {
                 console.debug(itemId)
+                this.selectedImage = null
+                this.selectedImageGrouped = null
+                this.selectedImageNotGrouped = null
                 this.activeItemId = itemId
                 this.activeCampaign = this.vueStore.adCampaignsMap.get(`${itemId}`)
 
@@ -423,11 +547,18 @@
                         const images = []
                         adsArray.forEach(adsItem => {
                             if(this.vueStore.adImagesMap.get(`${adsItem.TextAd?.AdImageHash}`))
-                                images.push(this.vueStore.adImagesMap.get(`${adsItem.TextAd.AdImageHash}`))
+                                images.push([adsItem, this.vueStore.adImagesMap.get(`${adsItem.TextAd.AdImageHash}`)])
+                        });
+
+                        const imagesMap = new Map()
+                        images.forEach(([adsItem, image]) => {
+                            imagesMap.set(`${image.AdImageHash}`, image)
                         });
 
                         this.activeImages = images
+                        this.activeImagesGrouped = Array.from(imagesMap.values())
                         this.loadingImages = false
+                        this.adsArray = adsArray
                         resolve(true)
                     })
                     .catch(error => {
@@ -442,7 +573,67 @@
 
             onCampaignLinkCLicked(campaignId) {
                 window.open(`https://direct.yandex.ru/dna/campaigns-edit?ulogin=artfabric-int&campaigns-ids=${campaignId}`, '_blank').focus()
-            }
+            },
+
+            onImagesGroupedInputChanged(event) {
+                this.selectedImage = null
+                this.selectedImageGrouped = null
+                this.selectedImageNotGrouped = null
+                this.activeImagesGroupedInput = event.target.checked
+            },
+
+            onImageClicked(event, imageHash) {
+                console.debug(imageHash)
+                const image = this.vueStore.adImagesMap.get(`${imageHash}`)
+                if (image) {
+                    this.selectedImage = image
+                }
+
+                const images = document.getElementsByClassName("ad_list_image_item");
+                for (const image of images) {
+                    image.classList.remove("active")
+                }
+                
+                event.target.classList.toggle('active')
+
+                const ads = this.adsArray.filter(ads => ads.TextAd.AdImageHash == imageHash)
+                ads.forEach(item => {
+                    const adsSummInfoObject = this.vueStore.adSummInfoMap.get(`${item.Id}`)
+                    if (adsSummInfoObject) {
+                        item['Cost'] = adsSummInfoObject.Cost
+                        item['Clicks'] = adsSummInfoObject.Clicks
+                        item['Impressions'] = adsSummInfoObject.Impressions
+                        item['Ctr'] = adsSummInfoObject.Ctr
+                    }
+                });
+                console.debug(ads)
+                this.selectedImageAds = ads
+            },
+
+            onNotGroupedImageClicked(event, adItem, adImage) {
+                console.debug(adItem, adImage)
+                this.selectedImage = adImage
+
+                const ads = this.adsArray.filter(ads => ads.Id == adItem.Id)
+                ads.forEach(item => {
+                    const adsSummInfoObject = this.vueStore.adSummInfoMap.get(`${item.Id}`)
+                    if (adsSummInfoObject) {
+                        item['Cost'] = adsSummInfoObject.Cost
+                        item['Clicks'] = adsSummInfoObject.Clicks
+                        item['Impressions'] = adsSummInfoObject.Impressions
+                        item['Ctr'] = adsSummInfoObject.Ctr
+                    }
+                });
+                console.debug(ads)
+                this.selectedImageAds = ads
+
+                const images = document.getElementsByClassName("ad_list_image_item");
+                for (const image of images) {
+                    image.classList.remove("active")
+                }
+
+                event.target.classList.toggle('active')
+            },
         }
     }
 </script>
