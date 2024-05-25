@@ -85,20 +85,29 @@
                             >
                         </div>
                         <div v-if="loadingImages == false && activeImagesGroupedInput == true" class="ad_image_wrapper">
-                            <img class="ad_list_image_item"
-                                v-for="adImage in activeImagesGrouped"
-                                :src= "adImage.PreviewUrl"
-                                :alt="adImage.Name"
-                                :title="adImage.Name"
-                                @click="onImageClicked($event, adImage.AdImageHash)"
-                            >
+                            <div class="ad_list_wrapper" v-for="adImage in activeImagesGrouped">
+                                <img class="ad_list_image_item"
+                                    :src= "adImage.PreviewUrl"
+                                    :alt="adImage.Name"
+                                    :title="adImage.Name"
+                                    @click="onImageClicked($event, adImage.AdImageHash)"
+                                >
+                                <div class="image_counter">
+                                    {{ getActiveImagesCount(adImage.AdImageHash) }}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- панель с инфо о картинке -->
                     <div class="campaigns_ad_image_info_wrapper">
                         <div v-if="selectedImage" class="selected_image">
-                            <img :src="selectedImage.OriginalUrl">
+                            <div class="image_wrapper">
+                                <img :src="selectedImage.OriginalUrl">
+                                <div class="image_counter">
+                                    {{ getActiveImagesCount(selectedImage.AdImageHash) }}
+                                </div>
+                            </div>
                             <div class="period_label">Данные за прошлые 10 дней</div>
                             <div class="info_header">
                                 <div class="id">id</div>
@@ -288,6 +297,22 @@
                         border: 1px solid #09F;
                     }
                 }
+
+                .ad_list_wrapper {
+                    position: relative;
+                    
+                    .image_counter {
+                        position: absolute;
+                        right: 5px;
+                        bottom: 10px;
+                        background: #FFF;
+                        border: 1px solid #000;
+                        padding: 2px 6px;
+                        border-radius: 50%;
+                        font-size: 12px;
+                    }
+                }
+
             }
         }
 
@@ -343,6 +368,25 @@
                 color: #FFF;
                 width: fit-content;
                 border-radius: 5px;
+            }
+
+            .image_wrapper {
+                position: relative;
+                
+                .image_counter {
+                    position: absolute;
+                    width: 30px;
+                    height: 30px;
+                    right: 5px;
+                    bottom: 10px;
+                    background: #FFF;
+                    border: 1px solid #000;
+                    border-radius: 50%;
+                    font-size: 15px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
             }
         }
     }
@@ -556,6 +600,7 @@
                         });
 
                         this.activeImages = images
+                        // console.debug(images)
                         this.activeImagesGrouped = Array.from(imagesMap.values())
                         this.loadingImages = false
                         this.adsArray = adsArray
@@ -569,6 +614,12 @@
                 })
                 this.loadingImages = true
                 yandexDirectCampaignAdsPromise(itemId)
+            },
+
+            getActiveImagesCount(imageHash) {
+                // console.debug(this.activeImages)
+                const count = this.activeImages.filter(item => item[0].TextAd.AdImageHash == imageHash).length
+                return count
             },
 
             onCampaignLinkCLicked(campaignId) {
