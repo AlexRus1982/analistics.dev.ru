@@ -9,6 +9,7 @@
                             <option value="YESTERDAY">Вчера</option>
                             <option value="LAST_WEEK">Неделя</option>
                             <option value="THIS_MONTH">Месяц</option>
+                            <option value="LAST_MONTH">Предыдущий месяц</option>
                         </select>
                     </div>
 
